@@ -25,7 +25,7 @@ Implement a secure, maintainable auth system for Expo web + native that:
    - web: browser-safe storage strategy
 3. Adds Bearer tokens to protected API requests.
 4. Handles token refresh and 401 recovery.
-5. Supports app logout and global session clear for the app context.
+5. Supports app logout and global session clear for the app context (see **Logout** below).
 6. Provides a simple auth state model the rest of the app can consume.
 
 ## Non-goals
@@ -79,6 +79,18 @@ Follow existing project patterns if they already exist.
 - Logged-in session bootstrap on app launch.
 - Logout action that clears local session and app auth state.
 - Minimal protected screen that calls `/v1/me` and renders result.
+
+### Logout (align with `f5m` + `f5b`)
+
+Implement **two layers** on sign-out:
+
+1. **Client:** `await supabase.auth.signOut({ scope: "global" })` so local secure storage / web storage and in-memory auth state clear, matching how `f5m` uses the browser Supabase client after `POST /auth/logout`.
+2. **API (optional but recommended):** `POST https://api.fistoffive.co/v1/logout` with header `Authorization: Bearer <access_token>` (the same access JWT used for `/v1/me`). The FastAPI backend verifies the JWT (JWKS) and calls Supabase Auth Admin `sign_out` with the **service role** to revoke refresh sessions. Requires `SUPABASE_SERVICE_ROLE_KEY` on the API host only.
+
+Notes:
+
+- The API cannot clear marketing-site cookies; `f5m` handles that with same-origin `POST /auth/logout`.
+- Access JWTs may still verify until `exp`; rely on short TTL + dead refresh after global sign-out.
 
 ### 6) Type safety and errors
 
