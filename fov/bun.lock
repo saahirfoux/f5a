@@ -6,6 +6,7 @@
       "name": "expo-router",
       "dependencies": {
         "@react-navigation/native": "7.2.0",
+        "@tamagui/animations-react-native": "^2.0.0-rc.31",
         "@tamagui/config": "^2.0.0-rc.31",
         "@tamagui/lucide-icons-2": "^2.0.0-rc.31",
         "@tamagui/toast": "^2.0.0-rc.31",

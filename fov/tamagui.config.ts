@@ -1,12 +1,31 @@
-import { defaultConfig } from '@tamagui/config/v5'
-import { createTamagui } from 'tamagui'
+import { createAnimations } from "@tamagui/animations-react-native";
+import { defaultConfig } from "@tamagui/config/v5";
+import { createTamagui } from "tamagui";
 
-export const config = createTamagui(defaultConfig)
+export const config = createTamagui({
+  ...defaultConfig,
+  animations: createAnimations({
+    bouncy: {
+      damping: 10,
+      mass: 0.9,
+      stiffness: 100,
+    },
+    lazy: {
+      damping: 18,
+      stiffness: 50,
+    },
+    quick: {
+      damping: 20,
+      mass: 1.2,
+      stiffness: 250,
+    },
+  }),
+});
 
-export default config
+export default config;
 
-export type Conf = typeof config
+export type Conf = typeof config;
 
-declare module 'tamagui' {
+declare module "tamagui" {
   interface TamaguiCustomConfig extends Conf {}
 }
