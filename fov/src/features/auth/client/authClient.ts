@@ -1,5 +1,6 @@
 import { createBetterAuthClient } from '@take-out/better-auth-utils'
 import { href } from 'one'
+import { useEffect } from 'react'
 
 import { SERVER_URL } from '~/constants/urls'
 import { showToast } from '~/interface/toast/Toast'
@@ -23,6 +24,24 @@ const betterAuthClient = createBetterAuthClient({
 
 export const useAuth = () => {
   const auth = betterAuthClient.useAuth()
+
+  useEffect(() => {
+    const sessionToken = auth.session?.token
+    if (auth.state !== 'logged-in' || auth.token || !sessionToken) {
+      return
+    }
+
+    void (async () => {
+      const token = await betterAuthClient.getValidToken()
+      if (!token) return
+
+      await betterAuthClient.setAuthClientToken({
+        token,
+        session: sessionToken,
+      })
+    })()
+  }, [auth.state, auth.token, auth.session?.token])
+
   return {
     ...auth,
     loginText: auth.state === 'logged-in' ? 'Account' : 'Login',

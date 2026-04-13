@@ -12,10 +12,23 @@ import type { AuthData } from '~/features/auth/types'
 
 export const POST: Endpoint = async (request) => {
   try {
+    const authHeader = request.headers.get('authorization')
+    const cookieHeader = request.headers.get('cookie')
+    console.info(`[zero] push request diagnostics`, {
+      path: new URL(request.url).pathname,
+      hasAuthorizationHeader: Boolean(authHeader),
+      hasCookieHeader: Boolean(cookieHeader),
+      hasBetterAuthCookie: cookieHeader?.includes('better-auth.jwt=') ?? false,
+    })
+
     const auth = await getAuthHeader(request)
 
     // use sub as fallback for id (standard JWT uses sub for subject/user id)
     const userId = auth?.id || auth?.sub
+    console.info(`[zero] push auth diagnostics`, {
+      authId: userId ?? null,
+      authRole: auth?.role ?? null,
+    })
     const authData: AuthData | null =
       auth && userId
         ? {

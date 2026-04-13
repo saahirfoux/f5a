@@ -29,6 +29,7 @@ export const ProvideZero = ({ children }: { children: ReactNode }) => {
   const userId = auth?.user?.id || 'anon'
   const jwtToken = auth?.token || ''
   const role = auth.user?.role
+  const providerKey = `${userId}:${jwtToken ? jwtToken.slice(0, 16) : 'no-token'}`
 
   const authData = useMemo((): AuthData | null => {
     if (userId === 'anon') {
@@ -43,6 +44,7 @@ export const ProvideZero = ({ children }: { children: ReactNode }) => {
 
   return (
     <ProvideZeroWithoutAuth
+      key={providerKey}
       userID={userId}
       auth={jwtToken}
       kvStore={isBrowser && userId ? 'idb' : 'mem'}

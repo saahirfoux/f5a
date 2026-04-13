@@ -26,8 +26,25 @@ export async function getAuthHeader(req: Request) {
     source = token ? 'cookie' : null
   }
 
+  // Diagnostic logging for native auth propagation issues.
+  // Intentionally logs only presence and token shape, never full token value.
+  console.info(`[auth] token diagnostics`, {
+    hasAuthorizationHeader: Boolean(authHeader),
+    hasJwtCookie: Boolean(getJWTRequestCookie(req)),
+    tokenSource: source,
+    tokenLength: token?.length ?? 0,
+    tokenPrefix: token ? token.slice(0, 12) : null,
+    requestPath: new URL(req.url).pathname,
+  })
+
   try {
     const result = token ? ((await validateToken(token)) as unknown as JWTPayload) : null
+    const userId = result?.id || result?.sub
+    console.info(`[auth] token parsed`, {
+      tokenSource: source,
+      authId: userId ?? null,
+      requestPath: new URL(req.url).pathname,
+    })
     return result
   } catch (err) {
     console.error(`[auth] validateToken error:`, err)
