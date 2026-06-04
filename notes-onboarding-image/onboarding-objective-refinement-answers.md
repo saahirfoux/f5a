@@ -42,19 +42,69 @@ Also, there will be no enter session code feature. ALL guests will join a sessin
 
 Question: How does this relate to host intent before OAuth (host_intent_signup_signin_readme.md)? Should onboarding force a “I’m hosting” choice early?
 
-Answer: THE HOST INTENT CHAT SHOULD BE NUKED, DELETED. IT was an idea I had about different signin flows for host and guest. I've since decided host intent is no longer needed. I thought I documented my newer direction in my documentation as well. I could be wrong.
+Answer: THE CONCEPT OF HOST INTENT SHOULD BE NUKED, DELETED. IT was an idea I had about different signin flows for host and guest. I've since decided host intent is no longer needed. I thought I documented my newer direction in my documentation as well. I could be wrong.
 
 Question: After onboarding, where should a host land: dashboard, blank new session, or resume last session?
 Answer: The dashboard.
 
 D. Content: copy and slides
 
-How many onboarding slides are you willing to ship in v1 (0, 1, 3+)?
+Question: How many onboarding slides are you willing to ship in v1 (0, 1, 3+)?
 
-For each slide, what is the single idea — no more than one claim per slide?
+Answer: no more than 2 or 3.
 
-What words do you ban (e.g. “real-time,” “AI,” “enterprise”) because they mis-set expectations?
+Question: For each slide, what is the single idea — no more than one claim per slide?
 
-What proof belongs on slide 1 if any: logos, numbers, “used in meetings,” or none?
+Answer: I don't know.
 
-To assist answering this question, visit MY website, my homepage for this application which is also the UI for the code located at /f5m.
+Question: What words do you ban (e.g. “real-time,” “AI,” “enterprise”) because they mis-set expectations?
+
+Answer: I don't know.
+
+Question: What proof belongs on slide 1 if any: logos, numbers, “used in meetings,” or none?
+
+Answer: I don't know.
+
+To assist answering some of these question, visit MY website, my homepage for this application which is also the UI for the code located at /f5m. And fyi, my website url is fistoffive.co
+
+F. Motion: when it earns its place
+
+Question: What does motion communicate that static copy cannot? If the answer is weak, static may win.
+
+Answer: I don't know. Maybe static is best.
+
+Question: Are animated bubbles meant to suggest live chat, audience voices, or delight only?
+
+Answer: Delight only. I'm not a ux designer. I don't know what's best.
+
+Question: What is your performance budget on low-end phones (e.g. “no jank on first paint,” “animations skippable”)?
+
+Answer: I'm not worries about low-end phones.
+
+Questoin: Would you accept reduced motion / accessibility setting turning the hero into static automatically?
+
+Answer: Perhaps.
+
+G. Scope and sequencing
+
+Question: Is this screen only cold start, or also returning user home?
+
+Answer: I don't know. A User who wants to host should be able to instantly start a session upon entering the app if they want. Its of secondary importance to let them fiddle with options/settings/reports, etc
+
+Question: What is explicitly out of scope for v1 hero (e.g. no carousel, no fake chat loop)?
+
+Answer: I don't know. I'll review and get better answers in v2.
+
+Question: What would make you ship a boring v1 and iterate vs wait until the fancy hero is ready?
+
+Answer: I don't understand the importance of this question. Why would I want to ship a boring v1? I need the functionality to be implemented, and a solid UXD that allows my users to easily use my app
+
+H. Success metrics
+
+Question: What measurable outcome defines success: time-to-first-session, signup completion, slide completion, host retention D1?
+
+Answer: time-to-first-session
+
+Question: What would you A/B test first: headline, CTA label, number of slides, or hero static vs motion?
+
+Answer: hero static vs motion
