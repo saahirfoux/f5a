@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fist of Five — F5A Product Personas</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #9aa8bc;
+      --accent: #3c87f7;
+      --accent-dim: #208aef33;
+      --warn: #f5a623;
+      --ok: #34c759;
+      --danger: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+    header {
+      padding: 2rem 1.5rem 1.5rem;
+      max-width: 56rem;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 650; }
+    header p { margin: 0.35rem 0 0; color: var(--muted); max-width: 44rem; }
+    main {
+      max-width: 56rem;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+    }
+    nav h2 { margin: 0 0 0.75rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    nav ul { margin: 0; padding-left: 1.25rem; columns: 2; column-gap: 2rem; }
+    @media (max-width: 640px) { nav ul { columns: 1; } }
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    section { margin-bottom: 2.5rem; }
+    section h2 {
+      font-size: 1.35rem;
+      margin: 0 0 0.5rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--accent-dim);
+    }
+    section h3 { font-size: 1.05rem; margin: 1.5rem 0 0.75rem; color: var(--text); }
+    section .meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0 0 1.25rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.55rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--surface);
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    tr:nth-child(even) td { background: #141b2411; }
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--warn);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+    .callout.info { border-left-color: var(--accent); }
+    .callout.ok { border-left-color: var(--ok); }
+    .callout h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+    .callout p:last-child { margin-bottom: 0; }
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .tag-tier1 { background: #34c75922; color: var(--ok); }
+    .tag-tier2 { background: #3c87f722; color: var(--accent); }
+    .tag-ref { background: #9aa8bc22; color: var(--muted); }
+    .tag-v1 { background: #34c75922; color: var(--ok); }
+    .tag-v11 { background: #f5a62322; color: var(--warn); }
+    article.persona {
+      margin: 1.25rem 0;
+      padding: 1rem 1.15rem;
+      background: var(--surface);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+    article.persona.tier1 { border-left-color: var(--ok); }
+    article.persona h3 { margin: 0 0 0.65rem; font-size: 1.1rem; }
+    article.persona .persona-meta { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.75rem; }
+    dl { margin: 0; }
+    dt { font-weight: 600; color: var(--accent); margin-top: 0.65rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    dd { margin: 0.25rem 0 0 0; color: var(--text); }
+    ol, ul { padding-left: 1.35rem; }
+    li { margin: 0.35rem 0; }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88em; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fist of Five — F5A Product Personas</h1>
+    <p>
+      <strong>7 personas</strong> for the Expo product app (<code>f5a</code> / <code>app.fistoffive.co</code>).
+      Aligned with <a href="platform-documentation-audit.html">platform-documentation-audit.html</a>,
+      <a href="platform-documentation-audit.html#host-life-scenarios-traceability">host life scenarios traceability</a>,
+      <a href="platform-documentation-audit.html#storybook-priority-review">Storybook priority review</a>, and
+      <a href="platform-documentation-audit.html#feature-roadmap">feature roadmap</a>.
+    </p>
+    <p>
+      Scope: in-app users only. Marketing <strong>Visitor</strong> (f5m waitlist) is intentionally excluded — see f5m docs.
+    </p>
+  </header>
+
+  <main>
+    <nav aria-label="Table of contents">
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#matrix">Persona matrix</a></li>
+        <li><a href="#tier1">Tier 1 — Session</a></li>
+        <li><a href="#tier2">Tier 2 — Account</a></li>
+        <li><a href="#storybook">Storybook mapping</a></li>
+        <li><a href="#archetypes">Market archetypes</a></li>
+        <li><a href="#not-personas">Not separate personas</a></li>
+      </ul>
+    </nav>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p class="meta">
+        Personas vs roles: <strong>session personas</strong> describe in-room behavior; <strong>account roles</strong> describe RBAC and menu visibility.
+        One signed-in user may be Host in a session and Manager on their account.
+      </p>
+
+      <div class="callout info">
+        <h3>Three tiers in this document</h3>
+        <ul>
+          <li><span class="tag tag-tier1">Tier 1</span> <strong>Session personas (2)</strong> — drive Storybook and core flows: Host, Participant</li>
+          <li><span class="tag tag-tier2">Tier 2</span> <strong>Account personas (5)</strong> — menu, gating, admin surfaces: Moderator, Manager, Admin, Reporter, Super Admin</li>
+          <li><span class="tag tag-ref">Reference</span> <strong>Market archetypes (5)</strong> — who Host often is in the wild; copy/messaging only, not separate UI trees</li>
+        </ul>
+      </div>
+
+      <p>
+        <strong>Canonical sources:</strong>
+        <code>f5m/documentation/foundational/fist_of_five_personas_v4.md</code>,
+        <code>f5m/documentation/implementation/canonical_contract_pack.md</code>,
+        <code>f5a/ONBOARDING_OBJECTIVE_REFINEMENT.md</code>,
+        <code>f5a/documentation/ux/f5a_mobile_ux_requirements.md</code>.
+      </p>
+    </section>
+
+    <section id="matrix">
+      <h2>Persona matrix</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Persona</th>
+            <th>Tier</th>
+            <th>Role</th>
+            <th>Platform</th>
+            <th>Auth</th>
+            <th>Primary job</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Host</strong></td>
+            <td><span class="tag tag-tier1">T1</span></td>
+            <td><code>HOST</code></td>
+            <td>f5a native (primary)</td>
+            <td>Signed in</td>
+            <td>Go live fast, share QR/link, see live spread, control session</td>
+          </tr>
+          <tr>
+            <td><strong>Participant</strong></td>
+            <td><span class="tag tag-tier1">T1</span></td>
+            <td>— (session visitor)</td>
+            <td>App Clip, web, or full app</td>
+            <td>Optional unless <code>require_auth</code></td>
+            <td>Join via link, vote 1–5, minimal friction</td>
+          </tr>
+          <tr>
+            <td><strong>Moderator</strong></td>
+            <td><span class="tag tag-tier2">T2</span></td>
+            <td><code>MODERATOR</code></td>
+            <td>f5a</td>
+            <td>Signed in</td>
+            <td>Oversee all account sessions; assign hosts; edit any session</td>
+          </tr>
+          <tr>
+            <td><strong>Manager</strong></td>
+            <td><span class="tag tag-tier2">T2</span></td>
+            <td><code>MANAGER</code></td>
+            <td>f5a</td>
+            <td>Signed in</td>
+            <td>Invite users, manage roles, disable members</td>
+          </tr>
+          <tr>
+            <td><strong>Admin</strong></td>
+            <td><span class="tag tag-tier2">T2</span></td>
+            <td><code>ADMIN</code></td>
+            <td>f5a</td>
+            <td>Signed in</td>
+            <td>Subscription, billing, full account control</td>
+          </tr>
+          <tr>
+            <td><strong>Reporter</strong></td>
+            <td><span class="tag tag-tier2">T2</span></td>
+            <td><code>REPORTER</code></td>
+            <td>f5a (secondary on phone)</td>
+            <td>Signed in</td>
+            <td>Read-only analytics across account sessions</td>
+          </tr>
+          <tr>
+            <td><strong>Super Admin</strong></td>
+            <td><span class="tag tag-tier2">T2</span></td>
+            <td><code>SUPER_ADMIN</code></td>
+            <td>f5a (rare on mobile)</td>
+            <td>Signed in</td>
+            <td>Platform-wide oversight and analytics</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="tier1">
+      <h2>Tier 1 — Session personas</h2>
+      <p class="meta">Primary Storybook and route drivers. Vote scale: <strong>1–5 only</strong>.</p>
+
+      <article class="persona tier1" id="persona-host">
+        <h3>1. Host <span class="tag tag-tier1">Session</span></h3>
+        <p class="persona-meta">Session Controller · <code>HOST</code> role · f5a native primary user ·
+          <a href="platform-documentation-audit.html#host-life-scenarios-traceability">Life scenarios traceability</a></p>
+        <dl>
+          <dt>Who they are</dt>
+          <dd>
+            One persona, many <strong>life modes</strong> — same signed-in host, different room context:
+            <ul>
+              <li><strong>Social hurry host</strong> — party, pizza decision, multitasking (Story A)</li>
+              <li><strong>Daily Scrum Master</strong> — standup vibe check, identify low voter by name (Story B)</li>
+              <li><strong>Auditorium presenter</strong> — anonymous room, projector results (Story C)</li>
+              <li><strong>Async creator</strong> — YouTuber, many sessions, link-in-bio distribution (Story D)</li>
+            </ul>
+            Also maps to market archetypes (see <a href="#archetypes">Market archetypes</a>) but remains a single Host persona.
+            Source stories: <code>life-scenarios-for-host.md</code>.
+          </dd>
+          <dt>Job to be done</dt>
+          <dd>
+            <ul>
+              <li><em>Go live in seconds</em> — party, standup; one control → QR + shareable link</li>
+              <li><em>See who voted what</em> when identified — follow up on low scores (John = 3)</li>
+              <li><em>Show anonymous aggregate to the room</em> when needed — projector / public results link</li>
+              <li><em>Manage many sessions over time</em> — weekly videos, list with activity badges</li>
+              <li>Answer <em>“How confident is this audience, right now?”</em> in under a minute</li>
+            </ul>
+            Per-person results and spread must never be buried for identified sessions.
+          </dd>
+          <dt>Session presets (not personas)</dt>
+          <dd>
+            <table>
+              <thead>
+                <tr><th>Preset</th><th>Life mode</th><th>Flags / behavior</th><th>Priority</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Team standup</strong></td>
+                  <td>Story B</td>
+                  <td>Identified; per-session QR; host sees names; pre-share link via email</td>
+                  <td><span class="tag tag-v1">v1</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Party quick</strong></td>
+                  <td>Story A</td>
+                  <td>Default/skip topic UI; glanceable aggregate; optional push (v1.1); partial turnout OK</td>
+                  <td><span class="tag tag-v1">v1</span> + <span class="tag tag-v11">v1.1</span></td>
+                </tr>
+                <tr>
+                  <td><strong>All-hands anonymous</strong></td>
+                  <td>Story C</td>
+                  <td>Anonymous-to-room; public live results URL; multi-topic; presenter web view</td>
+                  <td><span class="tag tag-v11">v1.1</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Creator / link-in-bio</strong></td>
+                  <td>Story D</td>
+                  <td>Anonymous web voters; session list CRUD; unread vote badges</td>
+                  <td><span class="tag tag-v11">v1.1</span></td>
+                </tr>
+              </tbody>
+            </table>
+            Presets are session configuration templates — not separate personas.
+          </dd>
+          <dt>Platform &amp; entry</dt>
+          <dd>
+            <strong>f5a</strong> native iOS/Android (primary). Expo web at <code>app.fistoffive.co</code> secondary.
+            Presenter public results may be web-only (Story C). Signs in via Supabase; guest-host behind feature flag (short-term only).
+          </dd>
+          <dt>Key flows</dt>
+          <dd>
+            <ol>
+              <li>Land on home → dominant <strong>Go live</strong> (or <strong>Resume</strong> if session active)</li>
+              <li>Go live → optional skip topic UI → default topic created → share via <code>HostShareCard</code></li>
+              <li><strong>Enter session</strong> before realtime room (v4 invariant); v1.1 may offer auto-enter for ad-hoc</li>
+              <li>Live host view: <code>LiveVoteRoster</code> + <code>SpreadSummaryBar</code>; return via push or resume</li>
+              <li>Presenter (v1.1): copy public results link → open on laptop → share screen to room</li>
+              <li>Creator (v1.1): dashboard session list with badges, rename, delete</li>
+            </ol>
+          </dd>
+          <dt>Routes</dt>
+          <dd><code>/host/&lt;session_id&gt;</code> · home shell · session list (v1.1) · menu · in-session settings</dd>
+          <dt>Success metrics</dt>
+          <dd>
+            Primary: <strong>time-to-first-session</strong>.
+            Secondary: decision made without reopening app (Story A); identified low voter within first minute of standup (Story B).
+          </dd>
+          <dt>Storybook priority</dt>
+          <dd>
+            <strong>High (v1)</strong> — GoLiveCTA, LiveVoteRoster, SpreadSummaryBar, HostShareCard, TopicHeader, RealtimeBanner.
+            <strong>v1.1</strong> — PublicResultsLinkCard, SessionListRow, SessionSummaryBar.
+            Build order: <a href="platform-documentation-audit.html#storybook-priority-review">Storybook priority review</a>.
+            Features: <a href="platform-documentation-audit.html#feature-roadmap">feature roadmap</a>.
+          </dd>
+        </dl>
+      </article>
+
+      <article class="persona tier1" id="persona-participant">
+        <h3>2. Participant <span class="tag tag-tier1">Session</span></h3>
+        <p class="persona-meta">Session Visitor · no account role required · guest-first</p>
+        <dl>
+          <dt>Who they are</dt>
+          <dd>
+            Someone in the audience who received a QR code or invite link.
+            Does not need the full app; prioritizes speed and low friction.
+          </dd>
+          <dt>Job to be done</dt>
+          <dd>
+            Join the session and cast a 1–5 confidence vote on the current topic.
+            Understand when voting is open, closed, or the session has ended.
+          </dd>
+          <dt>Platform &amp; entry</dt>
+          <dd>
+            <strong>iOS App Clip</strong> (vote-first, minimal chrome) · <strong>web</strong> via link · <strong>full f5a app</strong> optional.
+            No manual session code entry — QR or deep link only.
+          </dd>
+          <dt>Auth variants</dt>
+          <dd>
+            <ul>
+              <li><code>require_auth = false</code>, <code>require_name = false</code> → anonymous (<code>user_id</code> null)</li>
+              <li><code>require_name = true</code> → display name prompt</li>
+              <li><code>require_auth = true</code> → sign in or “Open full app to sign in”</li>
+            </ul>
+            These are <strong>session flags</strong>, not separate personas.
+          </dd>
+          <dt>Key flows</dt>
+          <dd>
+            <ol>
+              <li>Open <code>/session/&lt;session_id&gt;</code> from link or QR</li>
+              <li>If <code>SCHEDULED</code> pre-start → see start time, voting disabled</li>
+              <li>If <code>ACTIVE</code> → vote 1–5 via <code>VoteControl</code></li>
+              <li>If <code>ENDED</code> / <code>EXPIRED</code> → <code>SessionStateFullScreen</code> “Session is over”</li>
+              <li>Optional “Get full app” CTA — must not block voting</li>
+            </ol>
+          </dd>
+          <dt>Out of scope (App Clip)</dt>
+          <dd>Create session, invites, roles, billing, host takeover, multi-session browse</dd>
+          <dt>Storybook priority</dt>
+          <dd><strong>High</strong> — VoteControl, SessionStateFullScreen, TopicHeader, RealtimeBanner, App Clip compact layout</dd>
+        </dl>
+      </article>
+    </section>
+
+    <section id="tier2">
+      <h2>Tier 2 — Account personas</h2>
+      <p class="meta">RBAC-driven menu and gated actions. Lower Storybook priority than Tier 1.</p>
+
+      <article class="persona" id="persona-moderator">
+        <h3>3. Moderator <span class="tag tag-tier2">Account</span></h3>
+        <p class="persona-meta"><code>MODERATOR</code> · account-wide session oversight</p>
+        <dl>
+          <dt>Who they are</dt>
+          <dd>Account lead or agile program manager who oversees multiple facilitators and sessions across the organization.</dd>
+          <dt>Job to be done</dt>
+          <dd>Assign hosts to sessions, view and edit all account sessions, ensure sessions run smoothly across teams.</dd>
+          <dt>Includes</dt>
+          <dd>All <code>HOST</code> capabilities across the account (not only own sessions).</dd>
+          <dt>Key surfaces</dt>
+          <dd>Session list (all hosts), host assignment, session edit — often desktop-first; mobile secondary.</dd>
+          <dt>Storybook priority</dt>
+          <dd><strong>Low</strong> — defer until Tier 1 session loop ships</dd>
+        </dl>
+      </article>
+
+      <article class="persona" id="persona-manager">
+        <h3>4. Manager <span class="tag tag-tier2">Account</span></h3>
+        <p class="persona-meta"><code>MANAGER</code> · people &amp; permissions</p>
+        <dl>
+          <dt>Who they are</dt>
+          <dd>Team or department lead responsible for who has access to the Fist of Five account.</dd>
+          <dt>Job to be done</dt>
+          <dd>Invite colleagues, assign roles, disable users. Ensure the right people can host and report.</dd>
+          <dt>Key surfaces</dt>
+          <dd>Menu → <strong>Invites</strong>, <strong>Role management</strong> (Managers+ per UX spec).</dd>
+          <dt>Gating</dt>
+          <dd><code>GatedButton</code> when subscription seat limits apply.</dd>
+          <dt>Storybook priority</dt>
+          <dd><strong>Medium-low</strong> — Invites list, role change UI, GatedButton states</dd>
+        </dl>
+      </article>
+
+      <article class="persona" id="persona-admin">
+        <h3>5. Admin <span class="tag tag-tier2">Account</span></h3>
+        <p class="persona-meta"><code>ADMIN</code> · account owner · billing</p>
+        <dl>
+          <dt>Who they are</dt>
+          <dd>Account owner or IT buyer who purchased the subscription and owns billing relationship.</dd>
+          <dt>Job to be done</dt>
+          <dd>Manage plan, usage, upgrades. Full account control including all Manager capabilities.</dd>
+          <dt>Key surfaces</dt>
+          <dd>Menu → <strong>Subscription / billing</strong> (<code>ADMIN</code> only; others see hidden or “Contact your admin”).</dd>
+          <dt>Storybook priority</dt>
+          <dd><strong>Low</strong> — subscription screen deferred; Stripe integration not in v1 auth scope</dd>
+        </dl>
+      </article>
+
+      <article class="persona" id="persona-reporter">
+        <h3>6. Reporter <span class="tag tag-tier2">Account</span></h3>
+        <p class="persona-meta"><code>REPORTER</code> · read-only analytics</p>
+        <dl>
+          <dt>Who they are</dt>
+          <dd>Stakeholder who needs visibility into confidence trends across sessions without running or editing them.</dd>
+          <dt>Job to be done</dt>
+          <dd>View all account sessions, results, topics, and participants. Export or review historical spread.</dd>
+          <dt>Key surfaces</dt>
+          <dd>Analytics / reporting (secondary on phone per UX spec). No edit permissions.</dd>
+          <dt>Storybook priority</dt>
+          <dd><strong>Low</strong> — defer; likely web-first or tablet layout</dd>
+        </dl>
+      </article>
+
+      <article class="persona" id="persona-super-admin">
+        <h3>7. Super Admin <span class="tag tag-tier2">Account</span></h3>
+        <p class="persona-meta"><code>SUPER_ADMIN</code> · platform operator</p>
+        <dl>
+          <dt>Who they are</dt>
+          <dd>Platform owner (you) — internal ops, not a customer persona.</dd>
+          <dt>Job to be done</dt>
+          <dd>Platform-wide analytics, account oversight, support and health monitoring.</dd>
+          <dt>Key surfaces</dt>
+          <dd>Internal tools; rarely on mobile. Not a v1 Storybook target.</dd>
+          <dt>Storybook priority</dt>
+          <dd><strong>Defer</strong></dd>
+        </dl>
+      </article>
+    </section>
+
+    <section id="storybook">
+      <h2>Storybook mapping</h2>
+      <p class="meta">
+        Suggested build order from persona priority. See audit
+        <a href="platform-documentation-audit.html#storybook">Storybook roadmap</a>,
+        <a href="platform-documentation-audit.html#storybook-priority-review">priority review queue</a>, and
+        <a href="platform-documentation-audit.html#feature-roadmap">feature roadmap</a>.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Priority</th><th>Components / screens</th><th>Personas served</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1 — First slice</strong></td>
+            <td>GoLiveCTA, LiveVoteRoster, SpreadSummaryBar, VoteControl, SessionStateFullScreen, RealtimeBanner</td>
+            <td>Host, Participant (Stories A, B)</td>
+          </tr>
+          <tr>
+            <td><strong>2 — Session loop</strong></td>
+            <td>TopicHeader, HostShareCard, JoinLink, onboarding slides, host/participant frames, App Clip</td>
+            <td>Host, Participant</td>
+          </tr>
+          <tr>
+            <td><strong>3 — v1.1 Host power</strong></td>
+            <td>SessionSummaryBar, PublicResultsLinkCard, SessionListRow, TopicOptionalPlaceholder, presets picker</td>
+            <td>Host (Stories C, D)</td>
+          </tr>
+          <tr>
+            <td><strong>4 — Shell</strong></td>
+            <td>Menu drawer, auth states, settings push prefs</td>
+            <td>Host (+ signed-in account roles)</td>
+          </tr>
+          <tr>
+            <td><strong>5 — Admin</strong></td>
+            <td>Invites, role management, GatedButton</td>
+            <td>Manager, Moderator</td>
+          </tr>
+          <tr>
+            <td><strong>6 — Deferred</strong></td>
+            <td>Subscription, analytics dashboards, experience modes</td>
+            <td>Admin, Reporter, Super Admin</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout ok">
+        <h3>First slice (agreed)</h3>
+        <p>
+          <strong>GoLiveCTA</strong> + <strong>LiveVoteRoster</strong> + <strong>SpreadSummaryBar</strong> +
+          <strong>VoteControl</strong> + <strong>SessionStateFullScreen</strong> + <strong>RealtimeBanner</strong>
+          — covers Host stories A and B without v1.1 public results or session list.
+          Full queue: <a href="platform-documentation-audit.html#storybook-priority-review">Storybook priority review</a>.
+        </p>
+      </div>
+    </section>
+
+    <section id="archetypes">
+      <h2>Market archetypes <span class="tag tag-ref">Reference only</span></h2>
+      <p class="meta">
+        Not separate personas or Storybook trees. Context for <strong>Host</strong> onboarding copy, marketing alignment, and HubSpot segmentation.
+        Same Host persona, different room scale and vocabulary.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Archetype</th><th>Typical room</th><th>Typical moment</th><th>Copy angle</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Scrum Master</strong></td>
+            <td>~10 (dev team)</td>
+            <td>Sprint planning, retro, daily stand-up confidence</td>
+            <td>See who voted what; follow up on scores below 4</td>
+          </tr>
+          <tr>
+            <td><strong>Agile coach / PI facilitator</strong></td>
+            <td>~50–200</td>
+            <td>PI planning, scaled agile ceremonies</td>
+            <td>Room-scale confidence signal; talk about the spread</td>
+          </tr>
+          <tr>
+            <td><strong>Executive / all-hands lead</strong></td>
+            <td>~100</td>
+            <td>Company-wide alignment, strategy rollout</td>
+            <td>Honest signal without dominant voices; all-hands ready</td>
+          </tr>
+          <tr>
+            <td><strong>Conference speaker</strong></td>
+            <td>up to ~10,000</td>
+            <td>Keynote, workshop, slide QR</td>
+            <td>Hall-scale; QR on screen; no app download for guests</td>
+          </tr>
+          <tr>
+            <td><strong>Workshop facilitator</strong></td>
+            <td>~15–80</td>
+            <td>Training, design thinking, group exercises</td>
+            <td>Simultaneous vote; psychological safety</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="meta">Sources: f5m content rounds 2–4, research reports, SEO room-ladder metrics.</p>
+    </section>
+
+    <section id="not-personas">
+      <h2>Not separate personas</h2>
+      <p class="meta">Documented elsewhere or explicitly dropped — do not build persona-specific flows.</p>
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Treat as</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Visitor</strong> (f5m waitlist)</td>
+            <td>Marketing/GTM — lives in f5m, not this doc</td>
+          </tr>
+          <tr>
+            <td><strong>host_intent</strong> OAuth split</td>
+            <td>Dropped — unified sign-in (platform decision)</td>
+          </tr>
+          <tr>
+            <td><strong>Guest-host</strong></td>
+            <td>Host variant behind feature flag; not a separate persona</td>
+          </tr>
+          <tr>
+            <td><strong>Anonymous vs authenticated participant</strong></td>
+            <td>Session flags (<code>require_auth</code>, <code>require_name</code>)</td>
+          </tr>
+          <tr>
+            <td><strong>App Clip vs web vs full app guest</strong></td>
+            <td>Delivery channels for Participant — same persona</td>
+          </tr>
+          <tr>
+            <td><strong>HubSpot lifecycle</strong> (waitlist, power_host, etc.)</td>
+            <td>CRM segments — not UX personas</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      Fist of Five · f5a/documentation/platform-personas.html ·
+      7 F5A product personas · Self-contained — open in any browser ·
+      <a href="platform-documentation-audit.html">Audit</a> ·
+      <a href="platform-documentation-audit.html#storybook-priority-review">Storybook priority review</a> ·
+      <a href="platform-documentation-audit.html#feature-roadmap">Feature roadmap</a> ·
+      <a href="platform-documentation-audit.html#host-life-scenarios-traceability">Life scenarios traceability</a> ·
+      <a href="life-scenarios-for-host.md">Life scenarios (source)</a> ·
+      Generated 4 June 2026
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fist of Five — Platform Documentation Audit</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #9aa8bc;
+      --accent: #3c87f7;
+      --accent-dim: #208aef33;
+      --warn: #f5a623;
+      --ok: #34c759;
+      --danger: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+    header {
+      padding: 2rem 1.5rem 1.5rem;
+      max-width: 56rem;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 650; }
+    header p { margin: 0.35rem 0 0; color: var(--muted); max-width: 44rem; }
+    main {
+      max-width: 56rem;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+    }
+    nav h2 { margin: 0 0 0.75rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    nav ul { margin: 0; padding-left: 1.25rem; columns: 2; column-gap: 2rem; }
+    @media (max-width: 640px) { nav ul { columns: 1; } }
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    section { margin-bottom: 2.5rem; }
+    section h2 {
+      font-size: 1.35rem;
+      margin: 0 0 0.5rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--accent-dim);
+    }
+    section h3 { font-size: 1.05rem; margin: 1.5rem 0 0.75rem; color: var(--text); }
+    section .meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0 0 1.25rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.55rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--surface);
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    tr:nth-child(even) td { background: #141b2411; }
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    .diagram strong { color: var(--text); }
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--warn);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+    .callout.info { border-left-color: var(--accent); }
+    .callout.ok { border-left-color: var(--ok); }
+    .callout.danger { border-left-color: var(--danger); }
+    .callout h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+    .callout p:last-child { margin-bottom: 0; }
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .tag-auth { background: #34c75922; color: var(--ok); }
+    .tag-draft { background: #f5a62322; color: var(--warn); }
+    .tag-stale { background: #ff6b6b22; color: var(--danger); }
+    .tag-archive { background: #9aa8bc22; color: var(--muted); }
+    .tag-generic { background: #3c87f722; color: var(--accent); }
+    .tag-scope { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+    .tag-p0 { background: #ff6b6b33; color: var(--danger); }
+    .tag-p1 { background: #f5a62333; color: var(--warn); }
+    .tag-p2 { background: #9aa8bc33; color: var(--muted); }
+    .tag-resolved { background: #34c75933; color: var(--ok); }
+    .tag-v1 { background: #34c75922; color: var(--ok); }
+    .tag-v11 { background: #f5a62322; color: var(--warn); }
+    .tag-v2 { background: #9aa8bc22; color: var(--muted); }
+    details {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    summary {
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text);
+    }
+    details[open] summary { border-bottom: 1px solid var(--border); }
+    details .inner { padding: 0.5rem 0.75rem 1rem; overflow-x: auto; }
+    ol, ul { padding-left: 1.35rem; }
+    li { margin: 0.35rem 0; }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88em; }
+    a { color: var(--accent); }
+    .path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82em; word-break: break-all; }
+    .count-badge {
+      display: inline-block;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.15em 0.5em;
+      border-radius: 999px;
+      margin-left: 0.35rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fist of Five — Platform Documentation Audit</h1>
+    <p>
+      Generated 4 June 2026 · Last updated 4 June 2026 · Scope: <strong>63 markdown files</strong> across <strong>f5a</strong>, <strong>f5b</strong>, and <strong>f5m</strong>
+    </p>
+    <p>
+      Purpose: inventory scattered documentation, synthesize the F5A product vision for Storybook planning,
+      record <strong>resolved platform decisions</strong> (13 conflicts closed), and guide future doc centralization.
+    </p>
+  </header>
+
+  <main>
+    <nav aria-label="Table of contents">
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#authority">Canonical sources</a></li>
+        <li><a href="#platform-decisions">Platform decisions</a></li>
+        <li><a href="#implementation-gap">Implementation vs docs</a></li>
+        <li><a href="#f5a-vision">What is F5A?</a></li>
+        <li><a href="#users">Users &amp; audience</a></li>
+        <li><a href="#host-life-scenarios-traceability">Host life scenarios</a></li>
+        <li><a href="#storybook">Storybook roadmap</a></li>
+        <li><a href="#storybook-priority-review">Storybook priority review</a></li>
+        <li><a href="#feature-roadmap">Feature roadmap</a></li>
+        <li><a href="#inconsistencies">Resolved conflicts</a></li>
+        <li><a href="#inventory-f5a">Inventory: f5a</a></li>
+        <li><a href="#inventory-f5b">Inventory: f5b</a></li>
+        <li><a href="#inventory-f5m">Inventory: f5m</a></li>
+        <li><a href="#centralization">Centralization roadmap</a></li>
+      </ul>
+    </nav>
+
+    <section id="architecture">
+      <h2>Architecture snapshot</h2>
+      <p class="meta">
+        Three surfaces, one Supabase project, shared identity across subdomains.
+        Sources: <code>f5m/README.md</code>, <code>f5m/documentation/setup/production_tech_stack.md</code>.
+      </p>
+      <div class="diagram" role="img" aria-label="Three-repo architecture diagram">
+        <pre style="margin:0;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;line-height:1.6;color:var(--muted);">
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         Fist of Five platform                           │
+├─────────────────┬─────────────────────┬─────────────────────────────────┤
+│  f5m            │  f5a                │  f5b                            │
+│  fistoffive.co  │  app.fistoffive.co  │  api.fistoffive.co              │
+│  Next.js        │  Expo (RN + web)    │  FastAPI + Hypercorn            │
+│  Marketing,     │  Product app        │  Business API                   │
+│  SEO, waitlist, │  Host + participant │  Auth baseline live;            │
+│  web auth UX    │  EAS web + native   │  root paths: /me, /sessions…  │
+└────────┬────────┴──────────┬──────────┴──────────────┬──────────────────┘
+         │                   │                         │
+         └───────────────────┼─────────────────────────┘
+                             ▼
+              Supabase Auth + Postgres + Ably (realtime)
+         (cross-subdomain cookies on .fistoffive.co for web SSO)
+        </pre>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Repo</th><th>Host</th><th>Primary role</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>f5m</strong></td>
+            <td><code>fistoffive.co</code></td>
+            <td>Public marketing, SEO, pre-alpha waitlist, Google OAuth gateway, platform spec archive</td>
+          </tr>
+          <tr>
+            <td><strong>f5a</strong></td>
+            <td><code>app.fistoffive.co</code></td>
+            <td>Product UI — native mobile (host-focused), EAS Hosting web export, iOS App Clip for guests</td>
+          </tr>
+          <tr>
+            <td><strong>f5b</strong></td>
+            <td><code>api.fistoffive.co</code></td>
+            <td>Python API — JWT verification, root resource paths (no <code>/api</code> or <code>/v1</code> prefix); sessions/votes/Stripe/Ably tokens planned</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="authority">
+      <h2>Canonical sources</h2>
+      <p class="meta">When scattered docs conflict, start here. For product/architecture choices resolved in June 2026, this audit’s <a href="#platform-decisions">Platform decisions</a> section is authoritative until source <code>.md</code> files are updated.</p>
+      <table>
+        <thead>
+          <tr><th>Topic</th><th>Authoritative doc(s)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Platform decisions (resolved conflicts)</td>
+            <td class="path">f5a/documentation/platform-documentation-audit.html#platform-decisions</td>
+          </tr>
+          <tr>
+            <td>Production hosting</td>
+            <td class="path">f5m/documentation/setup/production_tech_stack.md</td>
+          </tr>
+          <tr>
+            <td>Product contracts (v4)</td>
+            <td class="path">f5m/documentation/foundational/*_v4.md + f5m/documentation/implementation/canonical_contract_pack.md</td>
+          </tr>
+          <tr>
+            <td>F5A mobile UX</td>
+            <td class="path">f5a/documentation/ux/f5a_mobile_ux_requirements.md</td>
+          </tr>
+          <tr>
+            <td>F5A auth implementation</td>
+            <td class="path">f5a/authPrompt.md + f5b/documentation/auth-setup/README.md</td>
+          </tr>
+          <tr>
+            <td>F5A host onboarding</td>
+            <td class="path">f5a/ONBOARDING_OBJECTIVE_REFINEMENT.md (supersedes notes-onboarding-image/ Q&amp;A)</td>
+          </tr>
+          <tr>
+            <td>Deployment / cross-subdomain auth</td>
+            <td class="path">f5a/documentation/README.md (also referenced from f5m README)</td>
+          </tr>
+          <tr>
+            <td>Marketing / SEO (shipped)</td>
+            <td class="path">f5m/documentation/implementation/marketing_seo_launch_readiness.md</td>
+          </tr>
+          <tr>
+            <td>Feature slices / Definition of Done</td>
+            <td class="path">f5m/documentation/implementation/feature_breakdown_projects.md</td>
+          </tr>
+          <tr>
+            <td>Host life scenarios → requirements</td>
+            <td class="path">f5a/documentation/life-scenarios-for-host.md + #host-life-scenarios-traceability (this file)</td>
+          </tr>
+          <tr>
+            <td>Storybook build queue + feature roadmap</td>
+            <td class="path">#storybook-priority-review + #feature-roadmap (this file — living review backlog)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout danger">
+        <h3>Known stale or misleading docs</h3>
+        <ul>
+          <li><span class="path">f5a/README.md</span> — generic Expo starter; no product content</li>
+          <li><span class="path">f5b/README.md</span> — describes JWT validation as “future” though auth is implemented</li>
+          <li><span class="path">f5m/documentation/implementation/acceptance_traceability.md</span>, <span class="path">release_readiness.md</span>, <span class="path">test_readiness.md</span> — reference <code>src/</code> paths that do not exist in current f5m tree</li>
+          <li>v2/v3 foundational specs — archived; use v4 for current host/participant rules</li>
+          <li>Socket.IO standalone docs — legacy; Ably is canonical per platform decisions</li>
+          <li><span class="path">f5m/documentation/setup/first_time_developer_setup.md</span> — OAuth callback path stale (<code>/api/auth/callback</code>); code uses <code>/auth/callback</code></li>
+          <li><span class="path">f5m/documentation/implementation/host_intent_*</span> — archived per platform decisions</li>
+          <li>Referenced Cursor plan <code>onboarding_objective_refinement_5e71bc32.plan.md</code> — not present on disk</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="platform-decisions">
+      <h2>Platform decisions</h2>
+      <p class="meta">Resolved 4 June 2026 — canonical until source <code>.md</code> files are aligned. 13 decisions recorded.</p>
+      <table>
+        <thead>
+          <tr><th>Topic</th><th>Decision</th><th>Rationale</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Home CTA</strong></td>
+            <td>Dominant <strong>“Go live”</strong>; Join secondary; resume active session first when applicable</td>
+            <td>Host-first, speed-to-live; dashboard/history is secondary navigation</td>
+          </tr>
+          <tr>
+            <td><strong>Vote scale</strong></td>
+            <td><strong>1–5 only</strong> in product</td>
+            <td>Digital app matches v4 schema; physical fist=0 practice is out of scope for v1; marketing copy should align over time</td>
+          </tr>
+          <tr>
+            <td><strong>Realtime</strong></td>
+            <td><strong>Ably</strong> (session events + vote reactions)</td>
+            <td>Per production_tech_stack; Socket.IO standalone docs are legacy</td>
+          </tr>
+          <tr>
+            <td><strong>API paths</strong></td>
+            <td>Root resources on subdomain: <code>/sessions</code>, <code>/votes</code>, <code>/me</code>, <code>/logout</code>, <code>/healthz</code> — no <code>/api</code> or <code>/v1</code></td>
+            <td><code>api.fistoffive.co</code> is the API namespace; avoids redundant <code>/api</code> and version-suffix maintenance</td>
+          </tr>
+          <tr>
+            <td><strong>host_intent</strong></td>
+            <td><strong>Dropped</strong> — archive f5m host_intent docs</td>
+            <td>Unified sign-in; role from account/session, not OAuth intent split</td>
+          </tr>
+          <tr>
+            <td><strong>Expo web hosting</strong></td>
+            <td><strong>EAS Hosting</strong> at <code>app.fistoffive.co</code></td>
+            <td>Per production_tech_stack.md</td>
+          </tr>
+          <tr>
+            <td><strong>Visual tone</strong></td>
+            <td><strong>Friendly</strong> — illustrated hero + dark CTA card, Memoji-style, speed-first</td>
+            <td>Onboarding direction; professional calm applies in-session, not splash/onboarding</td>
+          </tr>
+          <tr>
+            <td><strong>Package manager</strong></td>
+            <td><strong>Bun preferred</strong>; npm acceptable for Expo CLI</td>
+            <td><code>bun.lock</code> + cursor rules; generic Expo README remains template</td>
+          </tr>
+          <tr>
+            <td><strong>OAuth callback (f5m)</strong></td>
+            <td><code>/auth/callback</code> on <code>fistoffive.co</code></td>
+            <td>Confirmed in f5m code (<code>auth-corner.tsx</code>, <code>motion/oss/index.tsx</code>)</td>
+          </tr>
+          <tr>
+            <td><strong>Post-onboarding</strong></td>
+            <td>Dashboard = app home; <strong>Go live</strong> stays focal when no active session</td>
+            <td>Combines fast path to live with session history access</td>
+          </tr>
+          <tr>
+            <td><strong>Auth model</strong></td>
+            <td>Web SSO: <code>.fistoffive.co</code> cookies (f5m↔f5a web); API: Bearer JWT; native: secure storage</td>
+            <td>Complementary patterns — cookies for web continuity, Bearer for all API calls</td>
+          </tr>
+          <tr>
+            <td><strong>Naming</strong></td>
+            <td>Brand <strong>Fist of Five</strong>; shorthand <strong>FOV</strong>; package/code <code>fov</code></td>
+            <td>Consistent public vs internal naming</td>
+          </tr>
+          <tr>
+            <td><strong>Deployment guide</strong></td>
+            <td>Shared guide at <code>f5a/documentation/README.md</code>; not copied to f5b root</td>
+            <td>f5m README claim was incorrect; link rather than duplicate</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>API path impact on f5m (marketing site)</h3>
+      <div class="callout ok">
+        <h3>f5m does not need URL changes</h3>
+        <p>
+          Marketing auth stays on <code>fistoffive.co</code>: <code>/auth/callback</code>, <code>POST /auth/logout</code> — Next.js routes, unchanged.
+          f5m rarely calls the Python API; when it does, use root paths (e.g. <code>GET api.fistoffive.co/me</code>).
+        </p>
+      </div>
+      <p><strong>Downstream updates needed later</strong> (documented here; not implemented in this task):</p>
+      <ul>
+        <li><strong>f5b</strong> — migrate scaffold <code>/v1/me</code> → <code>/me</code>, <code>/v1/logout</code> → <code>/logout</code>, <code>/v1/auth-check</code> → <code>/auth-check</code></li>
+        <li><strong>f5a</strong> — API client paths in <code>authPrompt.md</code> and future <code>src/network/</code></li>
+        <li><strong>f5m README</strong> — optional logout line: <code>POST api.fistoffive.co/logout</code> (not <code>/v1/logout</code>)</li>
+        <li><strong>canonical_contract_pack.md</strong> — map old Next <code>/api/sessions</code> → <code>api.fistoffive.co/sessions</code></li>
+      </ul>
+      <div class="diagram" role="img" aria-label="Auth and API flow after decisions">
+        <pre style="margin:0;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;line-height:1.6;color:var(--muted);">
+f5m (fistoffive.co)  ──OAuth──►  /auth/callback  ──►  Supabase Auth
+f5a (app.fistoffive.co)  ──Bearer JWT──►  api.fistoffive.co/me, /sessions, /votes
+f5b  ──validates JWT──►  Supabase  ·  issues Ably tokens
+f5m  - - - (rare) - - -►  api.fistoffive.co/me
+        </pre>
+      </div>
+    </section>
+
+    <section id="implementation-gap">
+      <h2>Implementation vs documentation gap</h2>
+      <p class="meta">What exists in code today vs what docs describe as the full product.</p>
+      <table>
+        <thead>
+          <tr><th>Repo</th><th>Built today</th><th>Documented but not yet built</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>f5a</strong></td>
+            <td>Expo 56 scaffold, Expo Router, Storybook (<code>@storybook/react-native</code> v10), Reanimated, bottom sheet, SVG</td>
+            <td>Supabase client, Ably SDK, session/vote UI, auth flows, friendly onboarding slides</td>
+          </tr>
+          <tr>
+            <td><strong>f5b</strong></td>
+            <td>Scaffold auth at <code>/v1/*</code> (to migrate to root paths), JWKS JWT verification, CORS, health routes</td>
+            <td>Root-path routes (<code>/me</code>, <code>/sessions</code>, <code>/votes</code>), Stripe webhooks, Ably token issuance, Postgres integration</td>
+          </tr>
+          <tr>
+            <td><strong>f5m</strong></td>
+            <td>Marketing homepage, Motion hero, SEO metadata, pre-alpha waitlist (<code>/coming-soon</code>), Supabase SSR auth</td>
+            <td>Full voting app (specified in foundational docs; lives in f5a/f5b instead)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="f5a-vision">
+      <h2>What is F5A?</h2>
+      <p class="meta">AI synthesis from all reviewed documentation — intended to guide Storybook and component layout.</p>
+
+      <h3>Product</h3>
+      <p>
+        <strong>Fist of Five</strong> (code name <code>fov</code>, package name in <code>app.json</code>) is a
+        <strong>real-time confidence-voting tool</strong> for facilitators. Participants hold up 1–5 fingers digitally;
+        hosts see the spread instantly — the “raised hands in a room” metaphor. The core job is to answer
+        <em>“How confident is this audience, right now?”</em> in under a minute.
+      </p>
+      <p>
+        Tagline from marketing docs: <em>“Vote together. See the spread. Talk about what matters.”</em>
+        Positioning: fastest way for any facilitator to make audience confidence visible in real time — from scrum teams
+        (~10) to conference halls (~10,000).
+      </p>
+
+      <h3>F5A’s role in the platform</h3>
+      <p>
+        F5A is the <strong>product surface</strong> — not marketing. It is an <strong>Expo universal app</strong>
+        (iOS, Android, web export at <code>app.fistoffive.co</code>, which should be <code>noindex</code> per SEO docs).
+      </p>
+      <ul>
+        <li><strong>Hosts</strong> primarily use the native mobile app — fast session creation, QR/link sharing, live tallies</li>
+        <li><strong>Guests</strong> join via QR or invite link on web, iOS App Clip (vote-first, minimal chrome), or full app</li>
+        <li><strong>No manual session code entry</strong> — join via QR or deep link only</li>
+        <li><strong>Server-authoritative</strong> — session states and join/vote gates enforced by API, not UI guesswork</li>
+      </ul>
+
+      <h3>Core v1 loop</h3>
+      <ol>
+        <li>Host signs in via Supabase (guest-host behind feature flag for now)</li>
+        <li>Host creates or resumes a session → shareable link + QR</li>
+        <li>Host <strong>explicitly “Enters session”</strong> before joining the realtime room (v4 invariant)</li>
+        <li>Participants join and vote 1–5 on the current topic</li>
+        <li>Tallies and per-person results stay visible throughout</li>
+        <li>Optional ephemeral vote “reactions” — floating emoticons (Ably-powered, YouTube-lite; no video)</li>
+        <li>Session lifecycle: <code>CREATED</code> → <code>SCHEDULED</code> → <code>ACTIVE</code> → <code>ACTIVE_WITH_HOST_CONTROL</code> → <code>ENDED</code> / <code>EXPIRED</code></li>
+      </ol>
+
+      <h3>Explicit non-goals (current auth/onboarding scope)</h3>
+      <ul>
+        <li>Ably auth webhooks (reactions are separate from auth implementation)</li>
+        <li>Stripe billing UI (ADMIN subscription screen is documented but deferred)</li>
+        <li><strong>host_intent</strong> OAuth split — dropped; unified sign-in only</li>
+      </ul>
+
+      <h3>Vote scale</h3>
+      <p>
+        Digital votes are <strong>1–5 only</strong>. The physical Fist of Five practice sometimes uses fist=0;
+        that is out of scope for the v1 product. Marketing copy should align over time.
+      </p>
+
+      <h3>Visual tone</h3>
+      <p>
+        <strong>Friendly, speed-first</strong> for onboarding and home shell: illustrated hero, dark bottom CTA card (Memoji-style).
+        In-session UI stays clear and scannable — tallies and per-person results must never be buried.
+      </p>
+
+      <h3>Onboarding philosophy (host-first)</h3>
+      <p>
+        Mobile app skews <strong>host</strong>. First impression is action-first, not marketing:
+        dominant <strong>“Go live”</strong> CTA; Join is secondary; resume active session when applicable.
+        Dashboard is app home but not the focal point when no session is live.
+        2–3 onboarding slides max. Success metric: time-to-first-session.
+      </p>
+    </section>
+
+    <section id="users">
+      <h2>Users &amp; audience</h2>
+
+      <h3>Product personas</h3>
+      <table>
+        <thead>
+          <tr><th>Persona</th><th>Platform</th><th>Auth</th><th>Primary need</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Host / facilitator</strong></td>
+            <td>f5a native (primary)</td>
+            <td>Signed in</td>
+            <td>Create session fast, share QR/link, see live spread, control timing and topics</td>
+          </tr>
+          <tr>
+            <td><strong>Participant / guest</strong></td>
+            <td>App Clip, web, or app</td>
+            <td>Optional unless <code>require_auth</code></td>
+            <td>Join via link, vote 1–5, minimal friction</td>
+          </tr>
+          <tr>
+            <td><strong>Manager+</strong></td>
+            <td>f5a</td>
+            <td>Signed in</td>
+            <td>Invites, role management</td>
+          </tr>
+          <tr>
+            <td><strong>ADMIN</strong></td>
+            <td>f5a</td>
+            <td>Signed in</td>
+            <td>Subscription / billing</td>
+          </tr>
+          <tr>
+            <td><strong>Reporter / Super Admin</strong></td>
+            <td>f5a (secondary on phone)</td>
+            <td>Signed in</td>
+            <td>Analytics and reporting</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Market audiences (from f5m content &amp; research)</h3>
+      <ul>
+        <li><strong>Scrum Masters</strong> — dev teams ~10, sprint/retro/planning confidence checks</li>
+        <li><strong>Agile coaches &amp; PI planning facilitators</strong> — scaled agile ceremonies</li>
+        <li><strong>Executives / CEOs</strong> — all-hands ~100, strategic alignment visibility</li>
+        <li><strong>Conference speakers</strong> — rooms up to 10,000+, QR on slides</li>
+        <li><strong>Workshop facilitators</strong> — any group needing simultaneous honest signal</li>
+      </ul>
+
+      <h3>Use-case anchor</h3>
+      <p>
+        Agile Scrum / meeting facilitation. Scores below 4 signal a follow-up conversation opportunity.
+        Simultaneous voting reduces dominant-voice bias and false consensus.
+        Practitioner pain points (from research): slow manual polls, counting fingers at scale,
+        performative voting, psychological safety concerns.
+      </p>
+
+      <h3>Roles &amp; permissions (platform-wide)</h3>
+      <p class="meta">From canonical contract pack — enforced server-side with subscription gating on f5a.</p>
+      <p>
+        <code>HOST</code>, <code>MODERATOR</code>, <code>MANAGER</code>, <code>ADMIN</code>,
+        <code>REPORTER</code>, <code>SUPER_ADMIN</code> — create session, invites, role changes, and billing
+        gated by role + subscription tier.
+      </p>
+    </section>
+
+    <section id="host-life-scenarios-traceability">
+      <h2>Host life scenarios → requirements traceability</h2>
+      <p class="meta">
+        Source narratives: <code>f5a/documentation/life-scenarios-for-host.md</code> (4 stories, host perspective only).
+        Maps each story moment to requirements, UX decisions, and priority. Persona detail: <a href="platform-personas.html#persona-host">platform-personas.html#persona-host</a>.
+      </p>
+      <p>
+        <strong>Summary:</strong> <span class="tag tag-v1">v1</span> 12 requirements ·
+        <span class="tag tag-v11">v1.1</span> 14 requirements ·
+        <span class="tag tag-v2">v2</span> 6 requirements (approximate from stories A–D).
+      </p>
+
+      <h3>Story A — Party / pizza (~24, social host)</h3>
+      <table>
+        <thead>
+          <tr><th>Moment</th><th>Requirement</th><th>UX decision</th><th>Priority</th><th>Conflict</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pre-printed QR on wall for days</td>
+            <td>Reuse a <strong>stable join surface</strong> across sessions</td>
+            <td>Go live binds session to printed QR <strong>or</strong> per-session QR — product decision needed</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td class="path">v4 per-session join URL (feature_breakdown §4); v2 reusable link (fist_of_five_spec_v2.md) — not v4</td>
+          </tr>
+          <tr>
+            <td>Open app in hurry, start session</td>
+            <td><strong>One-tap go live</strong>, minimal setup</td>
+            <td>Dominant GoLiveCTA; no wizard before session exists</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Aligns with <a href="#platform-decisions">platform decisions</a></td>
+          </tr>
+          <tr>
+            <td>Skip formal topic; shout “pizza”</td>
+            <td>Topic optional at create; verbal OK</td>
+            <td>Auto default topic (“Untitled”); edit later — skip UI not data</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>feature_breakdown requires default topic on create</td>
+          </tr>
+          <tr>
+            <td>Push notification on votes</td>
+            <td>Host notified while away from app</td>
+            <td>OS push + deep link; throttle/batch option</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Settings “notifications placeholder” only in audit Storybook screens</td>
+          </tr>
+          <tr>
+            <td>Live feed: deciding + already voted</td>
+            <td>Host sees <strong>per-person state</strong> in realtime</td>
+            <td>LiveVoteRoster: pending vs cast; Ably vote_updated</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Aligns with ONBOARDING_OBJECTIVE_REFINEMENT.md</td>
+          </tr>
+          <tr>
+            <td>Put phone down, return later</td>
+            <td><strong>Glanceable aggregate</strong> on reopen</td>
+            <td>Resume session; SpreadSummaryBar + “N of M voted”</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Resume decision; SessionSummaryBar component new</td>
+          </tr>
+          <tr>
+            <td>Majority enough, not everyone voted</td>
+            <td>Partial participation valid</td>
+            <td>Show spread without shaming; no “wait for all” blocker</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>UX only — not in schema docs</td>
+          </tr>
+          <tr>
+            <td>Compare to last year’s party</td>
+            <td>Session history / trends</td>
+            <td>Dashboard/history secondary nav</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Story defers; Reporter persona territory</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Story B — Scrum Master / John (~12, daily identified)</h3>
+      <table>
+        <thead>
+          <tr><th>Moment</th><th>Requirement</th><th>UX decision</th><th>Priority</th><th>Conflict</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Daily standup vibe check</td>
+            <td><strong>Fast recurring session</strong> creation</td>
+            <td>Go live + optional “same settings as yesterday”</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Scheduling/recurrence not v1</td>
+          </tr>
+          <tr>
+            <td>QR on phone to camera</td>
+            <td>Share join surface without holding phone up</td>
+            <td>Pre-share link/QR via email, Slack, calendar</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>HostShareCard share sheet; email via OS share</td>
+          </tr>
+          <tr>
+            <td>Email QR ahead of call</td>
+            <td>Distribute join URL before meeting</td>
+            <td>Copy link primary; share sheet to email</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Not explicit in f5a_mobile_ux_requirements.md</td>
+          </tr>
+          <tr>
+            <td>See votes trickle in</td>
+            <td>Live tally + per-person results</td>
+            <td>Host session after Enter session</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>v4 Enter session vs story speed — see cross-story conflicts</td>
+          </tr>
+          <tr>
+            <td>Identify John with vote 3</td>
+            <td><strong>Identified</strong> participants visible to host</td>
+            <td><code>require_name</code> or auth; host-only name column</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>vs Story C anonymous — session flags</td>
+          </tr>
+          <tr>
+            <td>Follow up in meeting</td>
+            <td>Low scores visually scannable</td>
+            <td>Highlight votes below 4; optional sort</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Not in current UX spec</td>
+          </tr>
+          <tr>
+            <td>Q2/Q4 historical lows</td>
+            <td><strong>Long-range analytics</strong></td>
+            <td>Reporter/analytics surfaces</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Story defers</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Story C — CTO / taco Tuesday (auditorium, anonymous presenter)</h3>
+      <table>
+        <thead>
+          <tr><th>Moment</th><th>Requirement</th><th>UX decision</th><th>Priority</th><th>Conflict</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Multiple slide QRs / topics</td>
+            <td><strong>Multi-topic</strong> session or linked sessions</td>
+            <td>Topic switcher; each slide QR encodes topic or session</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>v4 topics exist; slide workflow not in f5a UX</td>
+          </tr>
+          <tr>
+            <td>Anonymous even if logged in</td>
+            <td><strong>Anonymous-to-room</strong> voting</td>
+            <td>Hide identity in public views; aggregate on projector</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Schema v4 anonymous supported; public anonymity flag — gap</td>
+          </tr>
+          <tr>
+            <td>Public live results URL, no login</td>
+            <td><strong>Public results viewer</strong> (web), live updates</td>
+            <td>Token URL; projector-friendly layout</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Not in audit/personas/UX until this traceability — largest new surface</td>
+          </tr>
+          <tr>
+            <td>Email results link before presenting</td>
+            <td>Pre-stage results link</td>
+            <td>PublicResultsLinkCard: copy + email-to-self</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>New feature</td>
+          </tr>
+          <tr>
+            <td>Link expiry (hour/day/days)</td>
+            <td>Configurable TTL on public link</td>
+            <td>Session settings default + override</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Not in schema docs today</td>
+          </tr>
+          <tr>
+            <td>Browser tab on presenter laptop</td>
+            <td><strong>Presenter display mode</strong></td>
+            <td>Large aggregate-only view; web-only likely</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>f5a native primary host vs web presenter split</td>
+          </tr>
+          <tr>
+            <td>Room sees strong 4 on projector</td>
+            <td>Aggregate spread visible to audience</td>
+            <td>Public results layout or experience mode</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Experience modes deferred in Storybook</td>
+          </tr>
+          <tr>
+            <td>Fast scan → App Clip vote</td>
+            <td>Participant instant join</td>
+            <td>App Clip + web vote path</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Aligns with UX requirements App Clip appendix</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Story D — YouTuber / engagement (async, batch sessions)</h3>
+      <table>
+        <thead>
+          <tr><th>Moment</th><th>Requirement</th><th>UX decision</th><th>Priority</th><th>Conflict</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>New session per weekly video</td>
+            <td><strong>Create many sessions</strong> over time</td>
+            <td>Dashboard list (secondary nav) + create from list</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Dashboard secondary to Go live; not in v1 Storybook</td>
+          </tr>
+          <tr>
+            <td>Linktree + social links</td>
+            <td>Share join URL across channels</td>
+            <td>HostShareCard copy link; QR export for video</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Channel-agnostic share</td>
+          </tr>
+          <tr>
+            <td>Anonymous web voters</td>
+            <td>Anonymous participant path</td>
+            <td>Web <code>/session/&lt;id&gt;</code> without auth</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Aligned with schema v4</td>
+          </tr>
+          <tr>
+            <td>Name/edit/delete sessions</td>
+            <td><strong>Session CRUD</strong> from list</td>
+            <td>Swipe delete, bulk delete, inline rename</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Not in v1 UX spec</td>
+          </tr>
+          <tr>
+            <td>Badge: new votes since last open</td>
+            <td><strong>Unread activity</strong> on list</td>
+            <td>SessionListRow dot/badge + vote count</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>New — not in docs</td>
+          </tr>
+          <tr>
+            <td>Total votes at a glance</td>
+            <td>Row summary metrics</td>
+            <td>“12 votes” on list row; views in v2</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>View count is v2</td>
+          </tr>
+          <tr>
+            <td>Views but zero votes</td>
+            <td><strong>Participant funnel analytics</strong></td>
+            <td>“X viewed, Y voted” per session</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Not in product docs</td>
+          </tr>
+          <tr>
+            <td>Low engagement frustration</td>
+            <td>Empty-state guidance</td>
+            <td>“0 votes” coaching; topic clarity tips</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>UX polish</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout danger">
+        <h3>Cross-story conflicts</h3>
+        <table>
+          <thead>
+            <tr><th>Conflict</th><th>Stories</th><th>Resolution direction</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Identified vs anonymous</strong></td>
+              <td>B vs C, D</td>
+              <td>Session flags — presets: “Team standup” vs “All-hands anonymous” (see personas Host session presets)</td>
+            </tr>
+            <tr>
+              <td><strong>Per-session QR vs wall QR</strong></td>
+              <td>A vs v4</td>
+              <td>v1: per-session QR on go-live; v1.1: pinned host QR — <strong>open product decision</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Enter session gate</strong></td>
+              <td>A, B vs v4</td>
+              <td>v1: keep Enter session; v1.1: optional auto-enter for ad-hoc — friction vs speed</td>
+            </tr>
+            <tr>
+              <td><strong>Public results URL</strong></td>
+              <td>C</td>
+              <td>v1.1 platform feature; likely f5m or f5a web export, not native-only</td>
+            </tr>
+            <tr>
+              <td><strong>Push notifications</strong></td>
+              <td>A</td>
+              <td>v1.1; native permissions + Ably/backend trigger</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout info">
+        <h3>Open product decisions (from stories)</h3>
+        <ul>
+          <li><strong>Pinned / reusable wall QR</strong> — Story A vs v4 per-session join URL</li>
+          <li><strong>Auto-enter on go live</strong> — Story A/B speed vs v4 Enter session invariant</li>
+          <li><strong>Public results URL host</strong> — f5m web vs f5a web export vs dedicated results subdomain</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="storybook">
+      <h2>Storybook component roadmap</h2>
+      <p class="meta">
+        Mapped from f5a UX docs, onboarding notes, feature breakdown, and
+        <a href="#host-life-scenarios-traceability">host life scenarios traceability</a>
+        (<code>life-scenarios-for-host.md</code>).
+        Existing setup: <code>.rnstorybook/</code>, <code>EXPO_PUBLIC_STORYBOOK_ENABLED=true</code>, <code>bun run storybook</code>.
+      </p>
+
+      <h3>Screens (routes / frames)</h3>
+      <ol>
+        <li><strong>Auth</strong> — login, loading, error states</li>
+        <li><strong>Home shell</strong> — dominant Go live CTA; Join secondary; profile chip → menu; dashboard/history secondary</li>
+        <li><strong>QR scanner</strong> — camera permission rationale, cancel back to home</li>
+        <li><strong>Session participant</strong> — topic header, vote 1–5, connection banner, scheduled/over states</li>
+        <li><strong>Session host — live</strong> — per-person vote list (pending/cast) + spread summary <span class="tag tag-v1">v1</span></li>
+        <li><strong>Session host — share</strong> — join URL + QR, Enter session, host controls <span class="tag tag-v1">v1</span></li>
+        <li><strong>App Clip compact</strong> — participant session only; “Get full app” CTA</li>
+        <li><strong>Session list / dashboard</strong> — rows with badges, rename, delete <span class="tag tag-v11">v1.1</span></li>
+        <li><strong>Public results viewer</strong> — aggregate-only, projector scale (web frame) <span class="tag tag-v11">v1.1</span></li>
+        <li><strong>Session presets picker</strong> — Team / Party / All-hands quick config (optional) <span class="tag tag-v11">v1.1</span></li>
+        <li><strong>Menu drawer / stack</strong> — invites, team &amp; roles, subscription (admin), settings, logout</li>
+        <li><strong>Settings</strong> — push notification prefs (v1.1), legal, version</li>
+      </ol>
+
+      <h3>Named components (Storybook candidates)</h3>
+      <table>
+        <thead>
+          <tr><th>Component</th><th>Variants / states</th><th>Priority</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>GoLiveCTA</code></td>
+            <td>Default, loading, resume-active</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Stories A, B; platform decisions</td>
+          </tr>
+          <tr>
+            <td><code>JoinLink</code></td>
+            <td>Secondary join entry; opens QR scanner</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>platform decisions</td>
+          </tr>
+          <tr>
+            <td><code>VoteControl</code></td>
+            <td>1–5, selected, disabled</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Participant; design master prompt</td>
+          </tr>
+          <tr>
+            <td><code>LiveVoteRoster</code></td>
+            <td>Pending, cast, anonymous aggregate-only</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Stories A, B</td>
+          </tr>
+          <tr>
+            <td><code>SpreadSummaryBar</code></td>
+            <td>Partial turnout, majority highlight</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Story A</td>
+          </tr>
+          <tr>
+            <td><code>SessionSummaryBar</code></td>
+            <td>N of M voted, dominant score</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Stories A, C</td>
+          </tr>
+          <tr>
+            <td><code>RealtimeBanner</code></td>
+            <td>Takeover, topic change, disconnect, session end</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>UX requirements</td>
+          </tr>
+          <tr>
+            <td><code>SessionStateFullScreen</code></td>
+            <td>Scheduled countdown; session over</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>design master prompt</td>
+          </tr>
+          <tr>
+            <td><code>TopicHeader</code></td>
+            <td>Topic change + a11y announcement</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>design master prompt</td>
+          </tr>
+          <tr>
+            <td><code>TopicOptionalPlaceholder</code></td>
+            <td>“Untitled” / verbal topic hint on go-live</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Story A</td>
+          </tr>
+          <tr>
+            <td><code>HostShareCard</code></td>
+            <td>URL copy, share sheet, QR display</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Stories B, D; design master prompt</td>
+          </tr>
+          <tr>
+            <td><code>PublicResultsLinkCard</code></td>
+            <td>Copy, email-self, expiry options</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Story C</td>
+          </tr>
+          <tr>
+            <td><code>SessionListRow</code></td>
+            <td>Default, unread votes badge; zero-vote + views (v2)</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Story D</td>
+          </tr>
+          <tr>
+            <td><code>GatedButton</code></td>
+            <td>Disabled + helper text</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>design master prompt</td>
+          </tr>
+          <tr>
+            <td>Onboarding slides</td>
+            <td>Friendly hero + dark CTA card</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>onboarding notes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Visual direction (Storybook tokens)</h3>
+      <p>
+        <strong>Friendly hero + dark CTA zone</strong> for shell and onboarding. Semantic tokens as placeholders until brand doc exists.
+        Light and dark system modes. Mobile-first; generous spacing around vote controls.
+      </p>
+
+      <h3>Storybook grouping by priority</h3>
+      <table>
+        <thead>
+          <tr><th>Priority</th><th>Components / screens</th><th>Stories served</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-v1">v1 — Now</span></td>
+            <td>GoLiveCTA, JoinLink, VoteControl, LiveVoteRoster, SpreadSummaryBar, SessionStateFullScreen, RealtimeBanner, HostShareCard, TopicHeader</td>
+            <td>A, B (+ participant path for C/D guests)</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-v11">v1.1 — Host power</span></td>
+            <td>SessionSummaryBar, PublicResultsLinkCard, SessionListRow, TopicOptionalPlaceholder, push deep-link shell, session presets picker</td>
+            <td>A (push), C (presenter), D (list)</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-v2">v2 — Deferred</span></td>
+            <td>History/trends charts, view-count funnel, YouTuber coaching empty states</td>
+            <td>A, B, D deferred moments</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Experience modes (platform feature — defer)</h3>
+      <p>
+        From v3 spec: <code>MAGNETIC</code>, <code>FLOATING</code>, <code>GALAXY</code>, etc. — in-session vote visualizations.
+        Story C projector view may use public results layout instead for v1.1. Defer experience-mode Storybook until core loop ships.
+      </p>
+
+      <div class="callout ok">
+        <h3>Recommended first Storybook slice</h3>
+        <p>
+          Build <strong>GoLiveCTA</strong> + <strong>LiveVoteRoster</strong> + <strong>SpreadSummaryBar</strong> +
+          <strong>VoteControl</strong> + <strong>SessionStateFullScreen</strong> + <strong>RealtimeBanner</strong>
+          — covers Host stories A and B (party hurry + Scrum standup) without v1.1 public results or session list.
+          Align with feature breakdown Projects 7–8.
+          Full review queue: <a href="#storybook-priority-review">Storybook priority review</a> ·
+          Product scope: <a href="#feature-roadmap">Feature roadmap</a>.
+        </p>
+      </div>
+    </section>
+
+    <section id="storybook-priority-review">
+      <h2>Storybook priority review</h2>
+      <p class="meta">
+        Ordered build queue for Storybook review and refinement. Reference: <a href="#storybook">Storybook roadmap</a>,
+        <a href="#host-life-scenarios-traceability">host life scenarios traceability</a>,
+        <a href="platform-personas.html#storybook">personas Storybook mapping</a>.
+        Fill <strong>Review status</strong> and <strong>Notes</strong> as you refine each item.
+      </p>
+
+      <div class="callout ok">
+        <h3>Start here — first Storybook slice (6 components)</h3>
+        <p>
+          <strong>GoLiveCTA</strong> · <strong>LiveVoteRoster</strong> · <strong>SpreadSummaryBar</strong> ·
+          <strong>VoteControl</strong> · <strong>SessionStateFullScreen</strong> · <strong>RealtimeBanner</strong>
+          — covers Host stories A and B without v1.1 public results or session list. Rows <strong>#1, #2, #3, #4, #7, #8</strong> below.
+        </p>
+      </div>
+
+      <h3>Master build queue</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Component / frame</th>
+            <th>Type</th>
+            <th>Priority</th>
+            <th>Variants to story</th>
+            <th>Personas</th>
+            <th>Stories</th>
+            <th>Depends on</th>
+            <th>Review status</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><code>GoLiveCTA</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Default, loading, resume-active</td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>Auth shell (mock signed-in)</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><code>VoteControl</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>1–5, selected, disabled</td>
+            <td>Participant</td>
+            <td>C, D</td>
+            <td>TopicHeader (optional mock)</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><code>SessionStateFullScreen</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Scheduled countdown; session over</td>
+            <td>Participant</td>
+            <td>All Tier 1</td>
+            <td>—</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><code>RealtimeBanner</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Takeover, topic change, disconnect, session end</td>
+            <td>Host, Participant</td>
+            <td>All Tier 1</td>
+            <td>—</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><code>JoinLink</code> + QR scanner frame</td>
+            <td>Component + frame</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Secondary join; camera permission; cancel to home</td>
+            <td>Host</td>
+            <td>B</td>
+            <td>Home shell frame</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Onboarding slides (friendly hero)</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>2–3 slides; dark CTA card; hero illustration</td>
+            <td>Host</td>
+            <td>Onboarding</td>
+            <td>GoLiveCTA</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><code>LiveVoteRoster</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Pending, cast, anonymous aggregate-only</td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>RealtimeBanner mock data</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><code>SpreadSummaryBar</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Partial turnout, majority highlight</td>
+            <td>Host</td>
+            <td>A</td>
+            <td>LiveVoteRoster</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td><code>TopicHeader</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Topic change + a11y announcement</td>
+            <td>Host, Participant</td>
+            <td>B</td>
+            <td>—</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td><code>HostShareCard</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>URL copy, share sheet, QR display</td>
+            <td>Host</td>
+            <td>B, D</td>
+            <td>Go live session mock</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>Home shell frame</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Go live dominant; Join secondary; profile chip → menu</td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>GoLiveCTA, JoinLink</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Host session — live frame</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>LiveVoteRoster + SpreadSummaryBar + TopicHeader</td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>#7, #8, #9</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>Host session — share frame</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>HostShareCard + Enter session + host controls</td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>HostShareCard</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td>Participant session frame</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>TopicHeader + VoteControl + RealtimeBanner</td>
+            <td>Participant</td>
+            <td>C, D</td>
+            <td>#2, #4, #9</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>App Clip compact frame</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Vote-only; “Get full app” CTA non-blocking</td>
+            <td>Participant</td>
+            <td>C</td>
+            <td>VoteControl, SessionStateFullScreen</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td><code>SessionSummaryBar</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>N of M voted, dominant score</td>
+            <td>Host</td>
+            <td>A, C</td>
+            <td>SpreadSummaryBar</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>17</td>
+            <td><code>TopicOptionalPlaceholder</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>“Untitled” / verbal topic hint on go-live</td>
+            <td>Host</td>
+            <td>A</td>
+            <td>GoLiveCTA</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>18</td>
+            <td><code>PublicResultsLinkCard</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Copy, email-self, expiry options</td>
+            <td>Host</td>
+            <td>C</td>
+            <td>HostShareCard pattern</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>19</td>
+            <td>Public results viewer frame (web)</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Aggregate-only, projector scale, live updating</td>
+            <td>Host (presenter), Participant (audience view)</td>
+            <td>C</td>
+            <td>PublicResultsLinkCard</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td><code>SessionListRow</code> + session list frame</td>
+            <td>Component + frame</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Default, unread votes badge; rename, delete</td>
+            <td>Host</td>
+            <td>D</td>
+            <td>Home shell secondary nav</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>21</td>
+            <td>Session presets picker frame</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Team / Party / All-hands / Creator quick config</td>
+            <td>Host</td>
+            <td>A–D</td>
+            <td>GoLiveCTA</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>22</td>
+            <td>Settings push prefs + deep-link shell</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Notification toggles; deep link to active session</td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Menu drawer</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>23</td>
+            <td>Menu drawer / auth states</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Login, loading, error; profile chip; logout</td>
+            <td>Host + account roles</td>
+            <td>—</td>
+            <td>Home shell</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>24</td>
+            <td><code>GatedButton</code></td>
+            <td>Component</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Disabled + helper text (seat limits)</td>
+            <td>Manager</td>
+            <td>—</td>
+            <td>Invites / role UI</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>25</td>
+            <td>Invites + role management frames</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Invite list, role change, pending invites</td>
+            <td>Manager, Moderator</td>
+            <td>—</td>
+            <td>Menu drawer, GatedButton</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>26</td>
+            <td>Experience mode visualizations</td>
+            <td>Component</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>MAGNETIC, FLOATING, GALAXY, etc.</td>
+            <td>Host, Participant</td>
+            <td>C</td>
+            <td>Public results may substitute for v1.1</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>27</td>
+            <td>History / trends charts</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Session history, year-over-year, quarterly lows</td>
+            <td>Host, Reporter</td>
+            <td>A, B</td>
+            <td>Session list</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>28</td>
+            <td>Funnel analytics + coaching empty states</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>“X viewed, Y voted”; zero-vote guidance</td>
+            <td>Host, Reporter</td>
+            <td>D</td>
+            <td>SessionListRow</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>29</td>
+            <td>Subscription screen</td>
+            <td>Frame</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Plan, usage, upgrade (Stripe deferred)</td>
+            <td>Admin</td>
+            <td>—</td>
+            <td>Menu drawer</td>
+            <td>☐ Not started</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Slice summary</h3>
+      <table>
+        <thead>
+          <tr><th>Slice</th><th>Rows</th><th>Goal</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1 — Core loop</strong></td>
+            <td>#1–#6</td>
+            <td>Ship vote path without admin dependencies</td>
+          </tr>
+          <tr>
+            <td><strong>2 — Host live A/B</strong></td>
+            <td>#7–#15</td>
+            <td>Party hurry + Scrum standup host experience</td>
+          </tr>
+          <tr>
+            <td><strong>3 — v1.1 Host power</strong></td>
+            <td>#16–#23</td>
+            <td>Presenter, creator list, push, presets</td>
+          </tr>
+          <tr>
+            <td><strong>Deferred</strong></td>
+            <td>#24–#29</td>
+            <td>Account admin, analytics, experience modes</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="feature-roadmap">
+      <h2>Feature roadmap</h2>
+      <p class="meta">
+        Full product backlog: UI, platform/API, realtime, and Tier 2 account surfaces.
+        Mapped to <a href="platform-personas.html">7 personas</a> and
+        <a href="#host-life-scenarios-traceability">host life stories A–D</a>.
+        Host-story UI counts: <span class="tag tag-v1">v1</span> ~12 ·
+        <span class="tag tag-v11">v1.1</span> ~14 · <span class="tag tag-v2">v2</span> ~6 (Tier 2 listed separately).
+      </p>
+
+      <h3>Tier A — Core session loop <span class="tag tag-v1">v1</span></h3>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Layer</th><th>Priority</th><th>Personas</th><th>Stories</th><th>Description</th><th>Open?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Supabase sign-in</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>—</td>
+            <td>Unified auth; guest-host behind feature flag only</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>One-tap go live</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>Dominant GoLiveCTA; minimal setup before session exists</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Default topic on create</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Auto “Untitled” topic; verbal topic OK; skip UI not data</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Join URL + QR per session</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host, Participant</td>
+            <td>B, D</td>
+            <td>Shareable link + QR; no manual session code entry</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>HostShareCard share sheet</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>B, D</td>
+            <td>Copy link + OS share (email, Slack, calendar)</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Enter session gate</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>Explicit Enter session before realtime room (v4 invariant)</td>
+            <td><a href="#host-life-scenarios-traceability">Auto-enter v1.1?</a></td>
+          </tr>
+          <tr>
+            <td>Vote 1–5</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Participant</td>
+            <td>C, D</td>
+            <td>VoteControl; scale 1–5 only</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Session lifecycle states</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host, Participant</td>
+            <td>All</td>
+            <td>CREATED → SCHEDULED → ACTIVE → ENDED / EXPIRED; server-authoritative</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Scheduled / session over UI</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Participant</td>
+            <td>All</td>
+            <td>SessionStateFullScreen for pre-start and ended states</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Resume active session</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>GoLiveCTA resume-active; return to live session</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Partial turnout display</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Show spread without “wait for all” blocker</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Anonymous guest path</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Participant</td>
+            <td>C, D</td>
+            <td><code>require_auth=false</code>; <code>user_id</code> null OK</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Identified participants to host</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host, Participant</td>
+            <td>B</td>
+            <td><code>require_name=true</code>; host sees names (John = 3)</td>
+            <td><a href="#host-life-scenarios-traceability">vs anonymous C/D</a></td>
+          </tr>
+          <tr>
+            <td>App Clip instant vote</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Participant</td>
+            <td>C</td>
+            <td>Scan QR → vote without full app download</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Web participant vote</td>
+            <td>Web-only</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Participant</td>
+            <td>D</td>
+            <td><code>/session/&lt;id&gt;</code> anonymous browser vote</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>f5b session CRUD</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td><code>/sessions</code> create, read, update; root paths (no /v1)</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Vote POST + tally</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Participant</td>
+            <td>All</td>
+            <td>Server-authoritative vote storage and spread</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Ably realtime</td>
+            <td>Realtime</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host, Participant</td>
+            <td>All</td>
+            <td><code>vote_updated</code> and connection banners; canonical transport</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Topic header + change</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host, Participant</td>
+            <td>B</td>
+            <td>TopicHeader with a11y announcement on change</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>QR scanner join</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>B</td>
+            <td>JoinLink secondary; camera permission rationale</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Tier B — Host live power <span class="tag tag-v1">v1</span></h3>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Layer</th><th>Priority</th><th>Personas</th><th>Stories</th><th>Description</th><th>Open?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>LiveVoteRoster</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>Per-person pending vs cast; realtime via Ably</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>SpreadSummaryBar</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Glanceable aggregate; partial turnout; majority highlight</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>RealtimeBanner</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host, Participant</td>
+            <td>All</td>
+            <td>Takeover, topic change, disconnect, session end</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Host live + share frames</td>
+            <td>UI</td>
+            <td><span class="tag tag-v1">v1</span></td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>Composed host session views after Enter session</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Tier C — Host power <span class="tag tag-v11">v1.1</span></h3>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Layer</th><th>Priority</th><th>Personas</th><th>Stories</th><th>Description</th><th>Open?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Push notification on vote</td>
+            <td>Platform/API + UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>OS push + deep link to active session; throttle option</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>SessionSummaryBar on resume</td>
+            <td>UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A, C</td>
+            <td>“N of M voted” + dominant score on reopen</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Auto-enter on go live</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A, B</td>
+            <td>Optional skip Enter session for ad-hoc sessions</td>
+            <td><a href="#host-life-scenarios-traceability">Friction vs speed</a></td>
+          </tr>
+          <tr>
+            <td>Pinned / reusable wall QR</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Stable join surface across sessions vs per-session QR</td>
+            <td><a href="#host-life-scenarios-traceability">Open decision</a></td>
+          </tr>
+          <tr>
+            <td>Public live results URL</td>
+            <td>Web-only + Platform/API</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>C</td>
+            <td>Anonymous aggregate viewer; no login; live updating</td>
+            <td><a href="#host-life-scenarios-traceability">f5m vs f5a host</a></td>
+          </tr>
+          <tr>
+            <td>Results link TTL</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>C</td>
+            <td>Expire after hour / day / days; default OK</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>PublicResultsLinkCard</td>
+            <td>UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>C</td>
+            <td>Copy results link, email-self, expiry options</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Presenter aggregate view</td>
+            <td>Web-only</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>C</td>
+            <td>Large-type projector layout; no host chrome</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Multi-topic / slide QR</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>C</td>
+            <td>Topic switcher; QR per slide question</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Session list CRUD</td>
+            <td>UI + Platform/API</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>D</td>
+            <td>Create from list; rename; delete one or bulk</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Unread vote badges</td>
+            <td>UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>D</td>
+            <td>Dot/badge on SessionListRow since last open</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Session presets</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A–D</td>
+            <td>Team / Party / All-hands / Creator flag templates</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>TopicOptionalPlaceholder</td>
+            <td>UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Skip formal topic UI on go-live path</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Low-score highlight</td>
+            <td>UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>B</td>
+            <td>Highlight votes below 4; optional sort by score</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Push notification prefs</td>
+            <td>UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Settings toggles for vote notifications</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Session flag schema</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host, Participant</td>
+            <td>B, C, D</td>
+            <td><code>anonymous_to_room</code>, <code>require_name</code>, preset bindings</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Public results token API</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>C</td>
+            <td>Issue/revoke public results tokens with TTL</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Push trigger on vote</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Host</td>
+            <td>A</td>
+            <td>Backend/Ably hook to send native push to host</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Tier D — Tier 2 account <span class="tag tag-v11">v1.1+</span> / defer</h3>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Layer</th><th>Priority</th><th>Personas</th><th>Stories</th><th>Description</th><th>Open?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Account-wide session list</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Moderator</td>
+            <td>—</td>
+            <td>View/edit all account sessions; host assignment</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Invites</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Manager</td>
+            <td>—</td>
+            <td>Invite colleagues to account</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Role management</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Manager</td>
+            <td>—</td>
+            <td>Assign HOST, MODERATOR, REPORTER, etc.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>GatedButton seat limits</td>
+            <td>UI</td>
+            <td><span class="tag tag-v11">v1.1</span></td>
+            <td>Manager</td>
+            <td>—</td>
+            <td>Disabled actions when subscription seat cap reached</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Subscription / billing</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Admin</td>
+            <td>—</td>
+            <td>Plan, usage, Stripe upgrade (explicitly deferred in vision)</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Read-only analytics export</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Reporter</td>
+            <td>B</td>
+            <td>Cross-session results; web-first layout</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Super Admin internal ops</td>
+            <td>Platform</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Super Admin</td>
+            <td>—</td>
+            <td>Platform-wide health, accounts, support tools</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Tier E — Analytics &amp; polish <span class="tag tag-v2">v2</span></h3>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Layer</th><th>Priority</th><th>Personas</th><th>Stories</th><th>Description</th><th>Open?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Session history / trends</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Host, Reporter</td>
+            <td>A</td>
+            <td>Compare to last year’s party; dashboard secondary nav</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Quarterly low-vote patterns</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Host, Reporter</td>
+            <td>B</td>
+            <td>Q2/Q4 historical lows across standups</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>View-count funnel</td>
+            <td>UI + Platform</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Host, Reporter</td>
+            <td>D</td>
+            <td>“X viewed, Y voted” per session</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Zero-vote coaching</td>
+            <td>UI</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Host</td>
+            <td>D</td>
+            <td>Empty-state guidance when engagement is low</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Experience modes</td>
+            <td>UI</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Host, Participant</td>
+            <td>C</td>
+            <td>MAGNETIC, FLOATING, GALAXY vote visualizations</td>
+            <td>Public results may substitute v1.1</td>
+          </tr>
+          <tr>
+            <td>Recurring / scheduled sessions</td>
+            <td>Platform/API</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Host</td>
+            <td>B</td>
+            <td>“Same settings as yesterday”; standup recurrence</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Vote reactions (emoticons)</td>
+            <td>Realtime + UI</td>
+            <td><span class="tag tag-v2">v2</span></td>
+            <td>Host, Participant</td>
+            <td>—</td>
+            <td>Ephemeral Ably-powered vote reactions (vision optional)</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout info">
+        <h3>Persona coverage checklist</h3>
+        <ul>
+          <li><strong>Host</strong> — Tiers A, B, C (+ v2 history)</li>
+          <li><strong>Participant</strong> — Tier A (vote, App Clip, web, anonymous/identified flags)</li>
+          <li><strong>Moderator</strong> — Tier D account-wide session list</li>
+          <li><strong>Manager</strong> — Tier D invites, roles, GatedButton</li>
+          <li><strong>Admin</strong> — Tier D subscription (v2)</li>
+          <li><strong>Reporter</strong> — Tier D export + Tier E analytics</li>
+          <li><strong>Super Admin</strong> — Tier D internal ops (v2)</li>
+        </ul>
+        <p class="meta">Stories A–D covered in Tiers A–C and Tier E. See <a href="#storybook-priority-review">Storybook priority review</a> for component build order.</p>
+      </div>
+    </section>
+
+    <section id="inconsistencies">
+      <h2>Resolved conflicts log</h2>
+      <p class="meta">All 13 former conflicts resolved 4 June 2026. Full decisions in <a href="#platform-decisions">Platform decisions</a>.</p>
+      <table>
+        <thead>
+          <tr><th>Priority</th><th>Issue</th><th>Former conflict</th><th>Status</th><th>Decision</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-p0">P0</span></td>
+            <td>Home CTA</td>
+            <td class="path">ONBOARDING_OBJECTIVE_REFINEMENT.md vs f5a_mobile_ux_requirements.md</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><strong>Go live</strong> dominant; Join secondary; resume active session first</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p0">P0</span></td>
+            <td>Vote scale</td>
+            <td>f5m research/HubSpot vs v4 schema</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><strong>1–5 only</strong> in product; marketing aligns over time</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p0">P0</span></td>
+            <td>Realtime transport</td>
+            <td>Socket.IO docs vs production_tech_stack.md</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><strong>Ably</strong> canonical; Socket.IO docs = legacy</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p1">P1</span></td>
+            <td>API paths</td>
+            <td>canonical_contract_pack <code>/api/*</code> vs f5b <code>/v1/*</code></td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td>Root paths on subdomain: <code>/sessions</code>, <code>/me</code>, etc. — no <code>/api</code> or <code>/v1</code></td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p1">P1</span></td>
+            <td>host_intent</td>
+            <td>f5m host_intent_* vs f5a onboarding</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><strong>Dropped</strong> — archive host_intent docs</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p1">P1</span></td>
+            <td>Expo web hosting</td>
+            <td>f5a/documentation/README.md vs production_tech_stack.md</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><strong>EAS Hosting</strong> for app.fistoffive.co</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p2">P2</span></td>
+            <td>Package manager</td>
+            <td>f5a/README.md vs f5a-expo.mdc</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><strong>Bun preferred</strong>; npm acceptable for Expo CLI</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p2">P2</span></td>
+            <td>OAuth callback</td>
+            <td>f5m README vs first_time_developer_setup.md</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><code>/auth/callback</code> (code wins); setup doc is stale</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p2">P2</span></td>
+            <td>Visual tone</td>
+            <td>design master prompt vs onboarding mock</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td><strong>Friendly</strong> hero + dark CTA for shell/onboarding</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p2">P2</span></td>
+            <td>Deployment guide copy</td>
+            <td>f5m README claims f5b root copy — not present</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td>Link to <code>f5a/documentation/README.md</code> as shared deploy guide</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p2">P2</span></td>
+            <td>Naming</td>
+            <td>Fist of Five / FOV / fov across repos</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td>Brand <strong>Fist of Five</strong>; shorthand <strong>FOV</strong>; package <code>fov</code></td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p2">P2</span></td>
+            <td>Post-onboarding landing</td>
+            <td>Q&amp;A vs refined spec vs UX requirements</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td>Dashboard = home; <strong>Go live</strong> focal when no active session</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-p2">P2</span></td>
+            <td>Auth model</td>
+            <td>deployment README vs authPrompt.md</td>
+            <td><span class="tag tag-resolved">Resolved</span></td>
+            <td>Web SSO cookies + Bearer JWT to API + native secure storage</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Still needs source doc updates</h3>
+      <p class="meta">Does not block Storybook — align scattered <code>.md</code> files when convenient.</p>
+      <table>
+        <thead>
+          <tr><th>File</th><th>Update needed</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="path">f5a/documentation/ux/f5a_mobile_ux_requirements.md</td>
+            <td>§3.1 home shell → Go live dominant; Ably-only realtime note</td>
+          </tr>
+          <tr>
+            <td class="path">f5a/documentation/ux/f5a_mobile_design_build_master_prompt.md</td>
+            <td>Home screen, Ably-only, friendly tone, GoLiveCTA</td>
+          </tr>
+          <tr>
+            <td class="path">f5a/authPrompt.md</td>
+            <td><code>/me</code>, <code>/logout</code> paths (not <code>/v1/*</code>)</td>
+          </tr>
+          <tr>
+            <td class="path">f5b routes + documentation/auth-setup/README.md</td>
+            <td>Migrate <code>/v1/*</code> scaffold → root paths</td>
+          </tr>
+          <tr>
+            <td class="path">f5m/documentation/setup/first_time_developer_setup.md</td>
+            <td><code>/auth/callback</code> not <code>/api/auth/callback</code></td>
+          </tr>
+          <tr>
+            <td class="path">f5m/documentation/implementation/host_intent_*</td>
+            <td>Mark archived</td>
+          </tr>
+          <tr>
+            <td class="path">f5m Socket.IO docs (setup + implementation)</td>
+            <td>Mark legacy</td>
+          </tr>
+          <tr>
+            <td class="path">f5a/documentation/README.md</td>
+            <td>EAS Hosting, bun preferred</td>
+          </tr>
+          <tr>
+            <td class="path">f5m/README.md</td>
+            <td>Fix deployment-guide-copy claim; <code>POST api.fistoffive.co/logout</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="inventory-f5a">
+      <h2>Document inventory: f5a <span class="count-badge">11 files</span></h2>
+      <details open>
+        <summary>All f5a markdown files</summary>
+        <div class="inner">
+          <table>
+            <thead>
+              <tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="path">f5a/README.md</td>
+                <td>Generic Expo starter — install, expo start, reset-project</td>
+                <td><span class="tag tag-generic">generic-template</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/AGENTS.md</td>
+                <td>Reminder to read Expo v56 docs before coding</td>
+                <td><span class="tag tag-generic">generic-template</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/CLAUDE.md</td>
+                <td>Single-line pointer to AGENTS.md</td>
+                <td><span class="tag tag-generic">generic-template</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/authPrompt.md</td>
+                <td>Auth implementation spec: Supabase, session storage, API client, Bearer JWT, logout, file layout, verification checklist</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/ONBOARDING_OBJECTIVE_REFINEMENT.md</td>
+                <td>Host first-impression product spec: Go live UX, onboarding slides, hero mock, returning-host behavior, metrics, Ably reactions</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/notes-onboarding-image/onboarding-objective-refinement-answers.md</td>
+                <td>Raw Q&amp;A archive from planning session (sections A–H)</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/notes-onboarding-image/goal-and-why-we-are-talking-about-this-onboarding-image.md</td>
+                <td>Origin note: why reference screenshot matters; Memoji/Tamagui/motion questions</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/notes-onboarding-image/README.md</td>
+                <td>Visual analysis of reference mock: 60/40 layout, typography, copy polish, safe-area guidance</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/documentation/README.md</td>
+                <td>Multi-app deployment &amp; auth guide: three surfaces, Supabase/Google OAuth, cross-subdomain cookies, DNS, EAS, rollout checklist</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/documentation/ux/f5a_mobile_ux_requirements.md</td>
+                <td>Primary UX specification: platforms, IA, flows, App Clip, realtime matrix, RBAC, session lifecycle, a11y</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5a/documentation/ux/f5a_mobile_design_build_master_prompt.md</td>
+                <td>Design/codegen master prompt: screen list, component inventory, visual direction, consolidated one-shot prompt</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5a-only</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+      <p class="meta">Also: <code>f5a/documentation/cursor-rules.html</code> (HTML, not counted in 63). Cursor rules in <code>.cursor/rules/*.mdc</code>.</p>
+    </section>
+
+    <section id="inventory-f5b">
+      <h2>Document inventory: f5b <span class="count-badge">5 files</span></h2>
+      <details open>
+        <summary>All f5b markdown files</summary>
+        <div class="inner">
+          <table>
+            <thead>
+              <tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="path">f5b/README.md</td>
+                <td>Project README: product snapshot, local dev, Railway deploy, future API duties</td>
+                <td><span class="tag tag-stale">stale</span></td>
+                <td><span class="tag tag-scope">f5b-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5b/PYTHON_BEST_PRACTICES.md</td>
+                <td>Dev conventions: venv, pinned deps, secrets, Hypercorn, structure, pytest/Ruff when needed</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5b-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5b/documentation/auth-setup/README.md</td>
+                <td>Primary technical spec: security decisions, env vars, routes, JWKS mode, f5m/f5a integration, logout matrix, test plan</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5b/documentation/knowledge/python-project-structure.md</td>
+                <td>Recommended FastAPI folder layout and refactor conventions</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5b-only</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5b/documentation/sub-domain-setup/README.md</td>
+                <td>DNS setup: Vercel CNAME api → Railway, verification, troubleshooting</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5b-only</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <section id="inventory-f5m">
+      <h2>Document inventory: f5m <span class="count-badge">47 files</span></h2>
+
+      <details>
+        <summary>Root (5 files)</summary>
+        <div class="inner">
+          <table>
+            <thead><tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="path">f5m/README.md</td>
+                <td>Primary architecture guide: 3-subdomain deploy, Supabase/Google auth, cookie SSO, f5m/f5a/f5b roles, rollout checklist</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/FistOfFiveReport.md</td>
+                <td>Internet research on Fist of Five practice — pain points, testimonials (duplicate of research copy)</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/new_idea-for-fov.md</td>
+                <td>Two-line ideas: post-vote animations, instant start/join</td>
+                <td><span class="tag tag-draft">working-draft</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/HUBSPOT_PRIORITY_FEATURES.md</td>
+                <td>HubSpot: pre-alpha waitlist + enterprise vote-to-action pipeline</td>
+                <td><span class="tag tag-draft">working-draft</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/HUBSPOT_ADDITIONAL_FEATURE_IDEAS.md</td>
+                <td>Seven follow-on HubSpot/GTM ideas</td>
+                <td><span class="tag tag-draft">working-draft</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details>
+        <summary>documentation/setup/ (5 files)</summary>
+        <div class="inner">
+          <table>
+            <thead><tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="path">f5m/documentation/setup/production_tech_stack.md</td>
+                <td>Source of truth for production hosting: Vercel/EAS/Railway/Supabase/Ably/cookies/CORS</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/setup/first_time_developer_setup.md</td>
+                <td>Local + Vercel onboarding: Node 24.7, Supabase, Google OAuth, Socket.IO, Stripe, SQL bootstrap</td>
+                <td><span class="tag tag-stale">stale</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/setup/brand_env.md</td>
+                <td>NEXT_PUBLIC_SHORT_BRAND_NAME, BOTTOM_ONE_TAP env usage</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/setup/migrations.md</td>
+                <td>Supabase SQL bootstrap order (001–060), RLS, verification queries</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/setup/socketio_standalone_master_handoff.md</td>
+                <td>Build/deploy standalone Node Socket.IO service</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details>
+        <summary>documentation/ideas/ (10 files)</summary>
+        <div class="inner">
+          <table>
+            <thead><tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="path">f5m/documentation/ideas/cross_subdomain_auth.md</td>
+                <td>Marketing + app + API auth flows, cookie domain, CORS, SEO split</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/content_ideas_round_1.md</td>
+                <td>Landing hero options A/B/C, feature cards, audience strip</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/content_ideas_round_2_audience_pain_point.md</td>
+                <td>Audience scale ladder (10→10k), core pain, messaging pillars</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/content_ideas_round_3_refined_positioning.md</td>
+                <td>Refined positioning, homepage section blueprint, QR copy</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/content_ideas_round_4_social_native_research.md</td>
+                <td>Long social-native hero/section variants from research report</td>
+                <td><span class="tag tag-draft">working-draft</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/seo/README.md</td>
+                <td>Locked SEO spine: title, meta, FOV hero subtitle, code mapping</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/seo/metrics-possible-alternatives/README.md</td>
+                <td>Why homepage HeroMetrics uses “Room ladder” variant</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/research/FistOfFiveReport.md</td>
+                <td>Internet research on Fist of Five practice (canonical research copy)</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/research/FistOfFiveSocialNativeReport.md</td>
+                <td>LinkedIn/social-native practitioner research</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/ideas/research/Round4Citiations.md</td>
+                <td>Citations supporting round 4 content</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details>
+        <summary>documentation/foundational/ (16 files)</summary>
+        <div class="inner">
+          <table>
+            <thead><tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_spec_v4.md</td>
+                <td>v4 host/participant flows, scheduling gates, landing behavior</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_personas_v4.md</td>
+                <td>Host vs participant responsibilities (v4)</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_acceptance_v4.md</td>
+                <td>v4 host/participant/landing acceptance criteria</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_state_machine_v4.md</td>
+                <td>Join/vote/topic-lock rules by state (v4)</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_schema_v4.md</td>
+                <td>Behavioral semantics: status gates, anonymous participants, votes 1–5</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_socket_v4.md</td>
+                <td>Socket v4: join blocking, vote rules, experience sync</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_spec_v3.md</td>
+                <td>Experience modes + frontend /experiences/ architecture</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_acceptance_v3.md</td>
+                <td>v3 experience-mode acceptance</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_state_v3.md</td>
+                <td>ACTIVE + experience mode transition note</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_schema_v3.md</td>
+                <td>Schema v3</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_socket_v3.md</td>
+                <td>Socket v3</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_spec_v2.md</td>
+                <td>Full app spec: roles, personas, lifecycle, participation, REST overview</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_acceptance_criteria.md</td>
+                <td>Baseline acceptance (pre-v4)</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_state_machine.md</td>
+                <td>Original state machine</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_schema.md</td>
+                <td>Early schema field list</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/foundational/fist_of_five_socket_api.md</td>
+                <td>Early socket event shapes</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details>
+        <summary>documentation/implementation/ (10 files)</summary>
+        <div class="inner">
+          <table>
+            <thead><tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="path">f5m/documentation/implementation/canonical_contract_pack.md</td>
+                <td>Merged v2+v3+v4: roles, states, data model, REST, Socket.IO, v4 invariants</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/feature_breakdown_projects.md</td>
+                <td>10 implementable project slices with Definition of Done</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/marketing_seo_launch_readiness.md</td>
+                <td>What f5m shipped: SEO, coming-soon, feature flag, tests</td>
+                <td><span class="tag tag-auth">authoritative</span></td>
+                <td><span class="tag tag-scope">f5m-marketing</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/host_intent_signup_signin_readme.md</td>
+                <td>Host vs participant OAuth intent (state vs localStorage)</td>
+                <td><span class="tag tag-stale">stale</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/host_intent_oauth_decision.md</td>
+                <td>Decision log for host intent through Google OAuth</td>
+                <td><span class="tag tag-stale">stale</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/socketio_realtime_contracts.md</td>
+                <td>Standalone Socket.IO service contracts</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/acceptance_traceability.md</td>
+                <td>Maps acceptance criteria → src/ paths</td>
+                <td><span class="tag tag-stale">stale</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/release_readiness.md</td>
+                <td>Delivery checklist referencing src/ scaffold</td>
+                <td><span class="tag tag-stale">stale</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/test_readiness.md</td>
+                <td>data-testid list + future test strategy</td>
+                <td><span class="tag tag-stale">stale</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+              <tr>
+                <td class="path">f5m/documentation/implementation/automated_e2e_walkthrough_notes.md</td>
+                <td>E2E script attempts; deferred; Socket smoke test passing</td>
+                <td><span class="tag tag-archive">archive/superseded</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details>
+        <summary>documentation/notes/ (1 file)</summary>
+        <div class="inner">
+          <table>
+            <thead><tr><th>Path</th><th>Purpose</th><th>Status</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="path">f5m/documentation/notes/developer.md</td>
+                <td>Founder notes: “Fist of Five” vs “Fist to Five”, domain choice, optional no-login session ideas</td>
+                <td><span class="tag tag-draft">working-draft</span></td>
+                <td><span class="tag tag-scope">platform-shared</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <p class="meta">
+        f5m total: 5 root + 5 setup + 10 ideas + 16 foundational + 10 implementation + 1 notes = <strong>47 files</strong>.
+        Combined with f5a (11) + f5b (5) = <strong>63 markdown files</strong>.
+        Excludes generated paths (<code>.expo/README.md</code>, <code>.venv/</code> package docs).
+      </p>
+    </section>
+
+    <section id="centralization">
+      <h2>Centralization roadmap</h2>
+      <p class="meta">P0/P1/P2 conflicts resolved in this audit (4 June 2026). Next: align source docs and code.</p>
+      <ol>
+        <li>
+          <strong>This audit is the living decision record</strong> — keep <code>platform-documentation-audit.html</code> updated when product choices change; link from other docs.
+        </li>
+        <li>
+          <strong>Align source <code>.md</code> files</strong> — see <a href="#inconsistencies">Still needs source doc updates</a> checklist (UX requirements, authPrompt, f5b routes, host_intent archive, Socket.IO legacy labels).
+        </li>
+        <li>
+          <strong>Migrate f5b auth scaffold</strong> — <code>/v1/me</code> → <code>/me</code>, <code>/v1/logout</code> → <code>/logout</code> before building session endpoints.
+        </li>
+        <li>
+          <strong>Start Storybook</strong> — see <a href="#storybook">Storybook roadmap</a>: GoLiveCTA, LiveVoteRoster, SpreadSummaryBar, VoteControl, SessionStateFullScreen, RealtimeBanner (Stories A/B).
+        </li>
+        <li>
+          <strong>Archive or label superseded docs</strong> — v2/v3 specs, Socket.IO standalone handoffs, stale <code>src/</code> traceability docs, host_intent docs.
+        </li>
+        <li>
+          <strong>Add a living component registry</strong> — new HTML doc alongside this audit once Storybook stories exist.
+        </li>
+      </ol>
+    </section>
+
+    <footer>
+      Fist of Five · f5a/documentation/platform-documentation-audit.html ·
+      Self-contained — open in any browser · 63 markdown files inventoried ·
+      13 platform decisions ·
+      <a href="#host-life-scenarios-traceability">Life scenarios traceability</a> ·
+      <a href="#storybook-priority-review">Storybook priority review</a> ·
+      <a href="#feature-roadmap">Feature roadmap</a> ·
+      Last updated 4 June 2026 ·
+      <a href="platform-personas.html#persona-host">Host persona</a> ·
+      <a href="platform-personas.html">All personas</a> ·
+      <a href="life-scenarios-for-host.md">Life scenarios (source)</a>
+    </footer>
+  </main>
+</body>
+</html>

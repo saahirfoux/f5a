@@ -1,0 +1,23 @@
+---
+description: f5a documentation — use self-contained HTML, not new Markdown files
+globs: documentation/**
+alwaysApply: false
+---
+
+# f5a documentation format
+
+## New documentation
+
+- Add **new** project documentation as **`.html`** files under `documentation/`, not `.md`.
+- Each HTML file must be **self-contained**: one file you can open or share without other assets (inline `<style>`, no external CSS/JS required for core content).
+- Prefer semantic HTML (`article`, `section`, `table`, `nav`) and a single embedded stylesheet in `<head>`.
+
+## Existing Markdown
+
+- Do **not** convert or delete existing `.md` files in `documentation/` unless explicitly asked.
+- When updating an existing topic that already has `.md`, you may edit that file; for **new** topics or full rewrites meant for sharing, use HTML.
+
+## Examples
+
+- Reference: `documentation/cursor-rules.html`
+- Avoid: creating `documentation/some-topic.md` for new guides

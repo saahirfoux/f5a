@@ -1,5 +1,7 @@
 # FistOfFive Multi-App Deployment and Auth Guide
 
+**f5a Cursor rules (shareable):** open [`documentation/cursor-rules.html`](cursor-rules.html) in a browser—self-contained rationale for each `.cursor/rules/*.mdc` file.
+
 This guide is the shared source of truth for deploying and operating the three app surfaces:
 
 - `fistoffive.co` (marketing / web shell, currently this repo `f5m`)

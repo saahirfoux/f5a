@@ -1,0 +1,58 @@
+---
+description: f5a Storybook for React Native — stories, entry, layout, TypeScript
+globs: "{**/*.stories.tsx,**/*.stories.ts,.rnstorybook/**,src/app/_layout.tsx,tsconfig.json,metro.config.js,babel.config.js}"
+alwaysApply: false
+---
+
+# f5a Storybook conventions
+
+## Dev workflow
+
+- Storybook mode: `EXPO_PUBLIC_STORYBOOK_ENABLED=true` via `bun run storybook` (or `storybook:ios` / `storybook:android` / `storybook:web`).
+- Normal app: `bun run start` — Metro `withStorybook` `enabled` is false; do not expect Storybook UI there.
+
+## Metro
+
+- Keep `withStorybook(config, { enabled: process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true' })` in `metro.config.js`.
+
+## Babel
+
+- `react-native-reanimated/plugin` must remain the **last** plugin in `babel.config.js`.
+
+## Routing (NativeTabs)
+
+- Root layout uses NativeTabs in `src/app/_layout.tsx` — do **not** add `src/app/storybook.tsx` or `/storybook` unless refactoring to a Stack/group layout.
+- Storybook is toggled only via env flag + early return importing `.rnstorybook` default export.
+
+## Stories
+
+- Colocate `*.stories.tsx` under **`src/`** (e.g. next to the component).
+- `.rnstorybook/main.ts` must include `../src/**/*.stories.?(ts|tsx|js|jsx)` (paths relative to `.rnstorybook/`).
+- After changing story **globs** in `main.ts`, run `bunx sb-rn-get-stories`, then restart Metro (`bun run storybook -- --clear` if stories still missing).
+
+## Entry (Expo Router layout swap)
+
+- `.rnstorybook/index.ts` must **`export default`** the Storybook UI component for import in `src/app/_layout.tsx`.
+- Do **not** use `registerRootComponent` in `index.ts` when Storybook is loaded via the layout swap.
+
+## Hooks in `_layout.tsx`
+
+- Call all hooks (e.g. `useColorScheme`) **before** any early return for Storybook mode.
+
+```tsx
+const colorScheme = useColorScheme();
+if (process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true') {
+  return <StorybookUIRoot />;
+}
+```
+
+## TypeScript
+
+- Storybook v10 does **not** ship `@storybook/react-native/types`.
+- Do **not** add that package to `tsconfig.json` `compilerOptions.types`.
+- Use generated `.rnstorybook/storybook.requires.ts` and `@storybook/react-native/metro-env` references instead.
+
+## Cross-platform stories
+
+- Prefer React Native primitives (`View`, `Text`, `Pressable`) or libraries that support iOS, Android, and `react-native-web`.
+- Avoid native-only modules in stories when targeting **Expo Go**; use a dev build or platform-specific files (`.ios.tsx`, `.web.tsx`) when needed.

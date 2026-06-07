@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>f5a Cursor rules — purpose and rationale</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #9aa8bc;
+      --accent: #3c87f7;
+      --accent-dim: #208aef33;
+      --warn: #f5a623;
+      --ok: #34c759;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+    header {
+      padding: 2rem 1.5rem 1.5rem;
+      max-width: 52rem;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 650; }
+    header p { margin: 0; color: var(--muted); max-width: 40rem; }
+    main {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+    }
+    nav h2 { margin: 0 0 0.75rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    nav ul { margin: 0; padding-left: 1.25rem; }
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    section { margin-bottom: 2.5rem; }
+    section h2 {
+      font-size: 1.35rem;
+      margin: 0 0 0.5rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--accent-dim);
+    }
+    section .meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0 0 1.25rem;
+    }
+    section .meta code {
+      background: var(--surface);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--surface);
+      font-weight: 600;
+      color: var(--muted);
+      width: 18%;
+    }
+    td:first-child { font-weight: 600; color: var(--text); width: 22%; }
+    tr:nth-child(even) td { background: #141b2411; }
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 1rem 0;
+    }
+    .diagram strong { color: var(--text); }
+    article.rule-block {
+      margin: 1.5rem 0;
+      padding: 1rem 1.15rem;
+      background: var(--surface);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+    article.rule-block h3 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+    dl { margin: 0; }
+    dt { font-weight: 600; color: var(--accent); margin-top: 0.65rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    dd { margin: 0.25rem 0 0 0; color: var(--text); }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>f5a Cursor rules</h1>
+    <p>
+      Why each rule exists in <code>.cursor/rules/</code>, what breaks without it, and why persistent
+      agent context matters. This file is self-contained—open or share it alone. Rule sources live in
+      the repo; this doc is the rationale.
+    </p>
+  </header>
+
+  <main>
+    <nav aria-label="Table of contents">
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#index">Rules index</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#f5a-expo">f5a-expo.mdc</a></li>
+        <li><a href="#f5a-storybook">f5a-storybook.mdc</a></li>
+        <li><a href="#meta">Meta rules (documentation)</a></li>
+        <li><a href="#adding">Adding a new rule</a></li>
+      </ul>
+    </nav>
+
+    <section id="index">
+      <h2>Rules index</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>When it applies</th>
+            <th>Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>f5a-expo.mdc</code></td>
+            <td>Always in f5a workspace</td>
+            <td>Bun, <code>src/app/</code> routes, <code>@/*</code> aliases, <code>.rnstorybook/</code> naming</td>
+          </tr>
+          <tr>
+            <td><code>f5a-storybook.mdc</code></td>
+            <td>Stories, Storybook config, layout, Metro/Babel/tsconfig</td>
+            <td>Dev workflow, Metro/Babel, NativeTabs routing, stories, entry, hooks, types, cross-platform</td>
+          </tr>
+          <tr>
+            <td><code>f5a-documentation.mdc</code></td>
+            <td>Files under <code>documentation/</code></td>
+            <td>New docs as self-contained HTML, not new Markdown</td>
+          </tr>
+          <tr>
+            <td><code>f5a-cursor-rules-maintain.mdc</code></td>
+            <td>Edits under <code>.cursor/rules/</code></td>
+            <td>Keep this HTML doc in sync when rules change</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p class="meta">
+        Location: <code>f5a/.cursor/rules/</code> · Multi-root workspace includes f5a, f5b, f5m
+      </p>
+      <p>
+        Cursor rules are short, always-on or file-scoped instructions for AI agents. f5a splits
+        Expo-wide conventions (always apply) from Storybook-specific ones (apply only when relevant
+        files are open) so agents are not overloaded on every edit.
+      </p>
+      <div class="diagram" role="note">
+        <strong>Storybook vs normal app</strong><br />
+        <code>bun run storybook</code> → <code>EXPO_PUBLIC_STORYBOOK_ENABLED=true</code> → Metro bundles Storybook →
+        <code>_layout.tsx</code> returns full-screen Storybook UI.<br />
+        <code>bun run start</code> → Metro <code>enabled: false</code> → NativeTabs app shell only.
+      </div>
+    </section>
+
+    <section id="f5a-expo">
+      <h2>f5a-expo.mdc</h2>
+      <p class="meta"><code>alwaysApply: true</code> — every f5a session</p>
+
+      <article class="rule-block">
+        <h3>Bun / bunx (not npm / npx)</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Use the project package manager (<code>bun.lock</code>) for installs, scripts, and one-off CLIs.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Mixed lockfiles, wrong dependency trees, or agents running <code>npx expo start</code> when scripts expect Bun.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Global habits default to npm; the rule makes Bun explicit for this repo only.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Routes under <code>src/app/</code></h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Expo Router screens live in <code>src/app/</code>, not a root-level <code>app/</code> folder.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>New screens added at <code>app/index.tsx</code> are ignored; routing appears “broken” with no clear error.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Expo templates often use root <code>app/</code>; this project deliberately uses <code>src/app/</code>.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Path alias <code>@/*</code> → <code>./src/*</code></h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Import app code via <code>@/components/...</code> per <code>tsconfig.json</code> paths.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Deep relative imports (<code>../../../components</code>) that break when files move; inconsistent style.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Aliases are configured but not obvious from folder layout alone.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3><code>.rnstorybook/</code> not <code>.storybook/</code></h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>React Native Storybook config lives in <code>.rnstorybook/</code>; web Storybook would use <code>.storybook/</code>.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Agent initializes or edits web Storybook; RN stories never load or wrong tooling is installed.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Storybook 9/10 renamed the RN folder; most docs still say <code>.storybook</code>.</dd>
+        </dl>
+      </article>
+    </section>
+
+    <section id="f5a-storybook">
+      <h2>f5a-storybook.mdc</h2>
+      <p class="meta">
+        <code>globs</code>: stories, <code>.rnstorybook/**</code>, <code>src/app/_layout.tsx</code>,
+        <code>tsconfig.json</code>, <code>metro.config.js</code>, <code>babel.config.js</code>
+      </p>
+
+      <article class="rule-block">
+        <h3>Dev workflow (<code>bun run storybook</code> vs <code>start</code>)</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Storybook only when <code>EXPO_PUBLIC_STORYBOOK_ENABLED=true</code> (via <code>bun run storybook</code> and variants).</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Agent runs <code>bun run start</code> and expects Storybook UI; or edits stories while Metro has Storybook disabled—stories missing, smaller bundle (~2MB vs ~4MB web export observed during setup).</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>This is the “front door” to Storybook; story-file rules do not say how to run the right mode.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Metro <code>withStorybook</code> + <code>enabled</code> flag</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd><code>metro.config.js</code> wraps config with <code>enabled: process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true'</code>.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Storybook always bundled in production/normal dev (bloat), or agent removes <code>enabled</code> and breaks <code>require.context</code> for stories.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>One-line config is easy to “simplify” away; import path must stay <code>@storybook/react-native/metro/withStorybook</code>.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Babel: Reanimated plugin last</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd><code>react-native-reanimated/plugin</code> is the last entry in <code>babel.config.js</code> plugins.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Cryptic worklet/runtime errors in Storybook or animated screens after adding another plugin.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd><code>babel.config.js</code> was added for Storybook; future Expo/React Compiler edits often reorder plugins.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>NativeTabs — no <code>/storybook</code> route</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Storybook via env flag + early return in <code>_layout.tsx</code>; no <code>src/app/storybook.tsx</code> unless Stack refactor.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Generic Expo+Storybook docs add <code>app/storybook.tsx</code> → Storybook inside tab chrome or forced layout rewrite.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Root layout uses <code>NativeTabs</code>, not Stack—contradicts most online examples.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Stories under <code>src/</code> + <code>sb-rn-get-stories</code></h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Colocate <code>*.stories.tsx</code>; <code>main.ts</code> glob <code>../src/**/*.stories.*</code>; regenerate index after glob changes.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Stories in wrong folder; sidebar empty until <code>bunx sb-rn-get-stories</code> and Metro restart.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Story discovery is generated, not automatic on every save.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Entry: <code>export default</code> in <code>.rnstorybook/index.ts</code></h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Default-export Storybook UI for import in <code>_layout.tsx</code>; no <code>registerRootComponent</code> in layout-swap mode.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Double entry points, blank screen, or Expo Router still owns root while Storybook also registers.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>CLI templates use <code>registerRootComponent</code>; this project uses Expo Router swap instead.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Hooks before early return in <code>_layout.tsx</code></h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Call <code>useColorScheme()</code> (and all hooks) before the Storybook <code>if</code> return.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Rules of Hooks violation—intermittent crashes or React errors in dev.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Early return for Storybook is correct pattern but easy to write hooks after it.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>TypeScript: no <code>@storybook/react-native/types</code></h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Do not add that package to <code>tsconfig.json</code> <code>compilerOptions.types</code> (v10 does not ship it).</dd>
+          <dt>What goes wrong without it</dt>
+          <dd><code>tsc</code> fails: cannot find type definition file.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Older guides reference the types package; generated <code>storybook.requires.ts</code> uses <code>metro-env</code> instead.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>Cross-platform / Expo Go stories</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>Prefer RN primitives and RN-web-compatible libs; avoid native-only modules in stories for Expo Go.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Story works on simulator, crashes in Expo Go; agent assumes one environment.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Stories are where agents add imports; you target Go + iOS + Android + web.</dd>
+        </dl>
+      </article>
+    </section>
+
+    <section id="meta">
+      <h2>Meta rules (documentation)</h2>
+
+      <article class="rule-block">
+        <h3>f5a-documentation.mdc</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>New documentation under <code>documentation/</code> is self-contained <code>.html</code>, not new <code>.md</code>.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Multi-file Markdown that does not open cleanly when sharing one file; inconsistent doc format.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Agents default to <code>.md</code>; existing <code>.md</code> files remain valid but new guides should be shareable single files.</dd>
+        </dl>
+      </article>
+
+      <article class="rule-block">
+        <h3>f5a-cursor-rules-maintain.mdc</h3>
+        <dl>
+          <dt>Purpose</dt>
+          <dd>When <code>.cursor/rules/</code> changes, update this HTML doc with purpose / failure mode / rationale per rule.</dd>
+          <dt>What goes wrong without it</dt>
+          <dd>Rules drift from docs; teammates and agents lose the “why” behind terse <code>.mdc</code> bullets.</dd>
+          <dt>Why a Cursor rule helps</dt>
+          <dd>Makes documentation a required part of the same change as the rule itself.</dd>
+        </dl>
+      </article>
+    </section>
+
+    <section id="adding">
+      <h2>Adding a new rule</h2>
+      <ol>
+        <li>Add <code>.cursor/rules/your-rule.mdc</code> with YAML frontmatter (<code>description</code>, <code>globs</code> or <code>alwaysApply</code>).</li>
+        <li>Keep the <code>.mdc</code> short and actionable.</li>
+        <li>Add a section to this file (or a new self-contained <code>documentation/*.html</code>) with <strong>Purpose</strong>, <strong>What goes wrong without it</strong>, and <strong>Why a Cursor rule helps</strong> for each convention.</li>
+        <li>Add a row to the <a href="#index">rules index</a> table above.</li>
+      </ol>
+      <p>
+        Optional conventions documented elsewhere but not encoded as rules: <code>cross-env</code> in
+        <code>package.json</code> scripts (already present); avoid default
+        <code>EXPO_PUBLIC_STORYBOOK_ENABLED</code> in <code>.env.local</code> (discipline + dedicated
+        <code>storybook</code> script).
+      </p>
+    </section>
+
+    <footer>
+      f5a · FistOfFive · Cursor rules reference · Open this file alone in any browser.
+    </footer>
+  </main>
+</body>
+</html>

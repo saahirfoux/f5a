@@ -1,0 +1,19 @@
+---
+description: When changing f5a Cursor rules, update documentation/cursor-rules.html
+globs: .cursor/rules/**
+alwaysApply: false
+---
+
+# Maintaining f5a Cursor rules
+
+When you **add or materially change** any file in `.cursor/rules/`:
+
+1. Update **`documentation/cursor-rules.html`** in the same change (self-contained HTML per `f5a-documentation` rule).
+2. For each rule (or each meaningful bullet in a rule file), document:
+   - **Purpose** — what the rule enforces and when it applies (`alwaysApply` vs globs).
+   - **What goes wrong without it** — concrete failure mode (broken build, wrong command, layout bug, etc.).
+   - **Why a Cursor rule helps** — why agents/humans need persistent context (non-obvious project choice, contradicts generic docs, easy to regress).
+3. Keep the `.mdc` file concise and actionable; put the longer rationale in the HTML doc.
+4. Add a row to the rules index table in `cursor-rules.html` linking the `.mdc` filename to its section.
+
+Do not edit the plan file in `.cursor/plans/`.

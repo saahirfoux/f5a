@@ -1,0 +1,26 @@
+---
+description: f5a Expo app — Bun, Expo Router paths, and import aliases
+alwaysApply: true
+---
+
+# f5a Expo conventions
+
+## Package manager
+
+- Use **bun** / **bunx** (not npm / npx) for installs, scripts, and one-off CLIs.
+- Examples: `bun install`, `bunx expo start`, `bunx sb-rn-get-stories`.
+
+## Expo Router
+
+- Routes live under **`src/app/`**, not `app/`.
+- Do not add new screens at the repo-root `app/` path.
+
+## Path aliases
+
+- `@/*` maps to `./src/*` (see `tsconfig.json`).
+- Import app code as `@/components/...`, not deep relative paths from distant folders when an alias fits.
+
+## Storybook config folder
+
+- React Native Storybook lives in **`.rnstorybook/`**, not `.storybook/`.
+- Do not initialize or edit web-only `.storybook/` for RN stories.
